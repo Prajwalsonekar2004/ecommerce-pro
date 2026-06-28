@@ -10,11 +10,7 @@ export default function FeaturedProducts() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            name={product.name}
-            price={product.price}
-          />
+          <ProductCard key={product.id} product={product}/>
         ))}
       </div>
     </section>
