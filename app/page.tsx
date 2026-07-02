@@ -9,9 +9,7 @@ export default function Home() {
     <>
       <Navbar/>
       <main>
-        <HeroSection/>
         <FeaturedProducts/>
-        <CategorySection/>
       </main>
       <Footer/>
     </>
