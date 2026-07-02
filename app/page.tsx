@@ -1,16 +1,26 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import HeroSection from "@/components/shared/HeroSection";
-import FeaturedProducts from "@/components/shared/FeaturedProducts";
-import CategorySection from "@/components/shared/CategorySection";
+import Hero from "@/components/home/Hero";
+import FeaturedProducts from "@/components/home/FeaturedProducts";
+import NewArrivals from "@/components/home/NewArrivals";
+import ShopByCategory from "@/components/home/ShopByCategory";
+import TrendingCollection from "@/components/home/TrendingCollection";
+import Newsletter from "@/components/home/Newsletter";
 
 export default function Home() {
   return (
     <>
       <Navbar />
+
       <main>
+        <Hero />
         <FeaturedProducts />
+        <NewArrivals />
+        <ShopByCategory />
+        <TrendingCollection />
+        <Newsletter />
       </main>
+
       <Footer />
     </>
   );
