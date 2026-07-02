@@ -1,14 +1,17 @@
-export default function Navbar() {
-    return (
-        <nav className="flex items-center justify-between px-8 py-4 border-b">
-            <h1 className="text-2x1 font-bold">Ecommerce Pro</h1>
+import Logo from "./Logo";
+import NavLinks from "./NavLinks";
+import NavActions from "./NavActions";
 
-            <ul className="flex gap-6">
-                <li>Home</li>
-                <li>Product</li>
-                <li>Categories</li>
-                <li>Contact</li>
-            </ul>
-        </nav>
-    );
+export default function Navbar() {
+  return (
+    <header className="sticky top-0 z-50 bg-white border-b">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+        <Logo />
+
+        <NavLinks />
+
+        <NavActions />
+      </div>
+    </header>
+  );
 }

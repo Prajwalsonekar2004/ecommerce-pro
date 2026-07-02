@@ -7,11 +7,11 @@ import CategorySection from "@/components/shared/CategorySection";
 export default function Home() {
   return (
     <>
-      <Navbar/>
+      <Navbar />
       <main>
-        <FeaturedProducts/>
+        <FeaturedProducts />
       </main>
-      <Footer/>
+      <Footer />
     </>
   );
 }
