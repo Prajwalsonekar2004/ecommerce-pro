@@ -12,6 +12,9 @@ export const products: Product[] = [
     stock: 20,
     rating: 4.8,
     image: "/products/headphones.jpg",
+    isFeatured: true,
+    isNewArrival: true,
+    isTrending: false,
   },
   {
     id: 2,
@@ -24,6 +27,9 @@ export const products: Product[] = [
     stock: 15,
     rating: 4.7,
     image: "/products/watch.jpg",
+    isFeatured: true,
+    isNewArrival: true,
+    isTrending: false,
   },
   {
     id: 3,
@@ -36,5 +42,8 @@ export const products: Product[] = [
     stock: 30,
     rating: 4.6,
     image: "/products/mouse.jpg",
+    isFeatured: true,
+    isNewArrival: true,
+    isTrending: false,
   },
 ];

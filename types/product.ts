@@ -9,4 +9,7 @@ export interface Product {
   stock: number;
   rating: number;
   image: string;
+  isFeatured: boolean;
+  isNewArrival: boolean;
+  isTrending: boolean;
 }
