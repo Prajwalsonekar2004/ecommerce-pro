@@ -13,4 +13,6 @@ export interface Product {
   isNewArrival: boolean;
   isTrending: boolean;
   discountPrice?: number;
+  gender: "Men" | "Women" | "Kids";
+  collection: string;
 }

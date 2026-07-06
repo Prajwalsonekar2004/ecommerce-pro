@@ -16,6 +16,8 @@ export const products: Product[] = [
     isFeatured: true,
     isNewArrival: true,
     isTrending: false,
+    gender: "Men",
+    collection: "Essentials",
   },
   {
     id: 2,
@@ -32,6 +34,8 @@ export const products: Product[] = [
     isFeatured: true,
     isNewArrival: true,
     isTrending: false,
+    gender: "Men",
+    collection: "Essentials",
   },
   {
     id: 3,
@@ -47,5 +51,7 @@ export const products: Product[] = [
     isFeatured: true,
     isNewArrival: true,
     isTrending: false,
+    gender: "Men",
+    collection: "Essentials",
   },
 ];

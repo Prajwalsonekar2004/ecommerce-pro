@@ -20,3 +20,11 @@ export function getTrendingProducts(): Product[] {
 export function getProductBySlug(slug: string): Product[] {
   return products.find((product) => product.slug === slug);
 }
+
+export function getProductsByGender(gender: "Men" | "Women" | "Kids") {
+  return products.filter((product) => product.gender === gender);
+}
+
+export function getProductsByCollection(collection: string) {
+  return products.filter((product) => product.collection === collection);
+}
