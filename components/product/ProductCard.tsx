@@ -1,28 +1,31 @@
+import Link from "next/link";
 import { Product } from "@/types/product";
-import formatCurrency from "@/lib/format";
+
+import ProductBadge from "./ProductBadge";
+import ProductImage from "./ProductImage";
+import ProductInfo from "./ProductInfo";
+import ProductImage from "./ProductImage";
+import { link } from "fs";
+import AddToCartButton from "./AddToCartButton";
 
 type ProductCardProps = {
   product: Product;
 };
 
-export default function ProductCard({ product }: Readonly<ProductCardProps>) {
+export default function ProductCard({ product }: ProductCardProps) {
   return (
-    <div className="border rounded-xl p-6 shadow hover:shadow-lg transition">
-      <div className="h-48 bg-gray-200 rounded-lg mb-4 "></div>
+    <Link href={"/products/${product.slug"}>
+      <article className="group">
+        <div className="relative">
+          <ProductBadge discountPrice={product.discountPrice} />
 
-      <h3 className="text-xl font-semibold ">{product.name}</h3>
+          <ProductImage product={product} />
+        </div>
 
-      <p className="mt-2 text-gray-600">
-        {formatCurrency(product.price)}
-      </p>
+        <ProductInfo product={product} />
 
-      <button className="mt-4 bg-black text-white px-4 py-2 rounded-lg">
-        Add To Cart
-      </button>
-
-      <p className="text-sm text-gray-500 mt-2">{product.category}</p>
-
-      <p className="text-yellow-500">⭐ {product.rating}</p>
-    </div>
+        <AddToCartButton />
+      </article>
+    </Link>
   );
 }

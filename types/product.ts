@@ -12,4 +12,5 @@ export interface Product {
   isFeatured: boolean;
   isNewArrival: boolean;
   isTrending: boolean;
+  discountPrice?: number;
 }
