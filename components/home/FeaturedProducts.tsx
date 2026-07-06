@@ -16,3 +16,7 @@ export default function FeaturedProducts() {
     </section>
   );
 }
+
+const products = getProducts({
+  featured: true,
+});

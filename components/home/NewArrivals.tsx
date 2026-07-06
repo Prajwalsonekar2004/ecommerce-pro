@@ -1,5 +1,5 @@
 import ProductGrid from "../product/ProductGrid";
-import { getNewArrivals } from "@/services/product.service";
+import { getNewArrivals, getProducts } from "@/services/product.service";
 
 export default function NewArrivals() {
   const products = getNewArrivals();
@@ -16,3 +16,7 @@ export default function NewArrivals() {
     </section>
   );
 }
+
+const Products = getProducts({
+  newArrival: true,
+});

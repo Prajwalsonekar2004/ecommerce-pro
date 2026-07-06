@@ -1,3 +1,5 @@
+import { NewArrivals } from "@/components/home/NewArrivals";
+import { Product } from "@/types/product";
 export interface Product {
   id: number;
   name: string;
@@ -15,4 +17,13 @@ export interface Product {
   discountPrice?: number;
   gender: "Men" | "Women" | "Kids";
   collection: string;
+}
+
+export interface ProductFilters {
+  gender?: "Men" | "Women" | "Kids";
+  category?: string;
+  collection?: string;
+  featured?: boolean;
+  newArrival?: boolean;
+  trending?: boolean;
 }
