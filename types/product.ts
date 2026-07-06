@@ -1,5 +1,6 @@
 import { NewArrivals } from "@/components/home/NewArrivals";
 import { Product } from "@/types/product";
+
 export interface Product {
   id: number;
   name: string;
@@ -10,7 +11,8 @@ export interface Product {
   brand: string;
   stock: number;
   rating: number;
-  image: string;
+  images: string[];
+  reviewCount: number;
   isFeatured: boolean;
   isNewArrival: boolean;
   isTrending: boolean;
