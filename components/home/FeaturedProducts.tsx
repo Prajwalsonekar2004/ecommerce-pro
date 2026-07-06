@@ -2,7 +2,9 @@ import ProductGrid from "../product/ProductGrid";
 import { getFeaturedProducts } from "@/services/product.service";
 
 export default function FeaturedProducts() {
-  const products = getFeaturedProducts();
+  const products = getProducts({
+    featured: true,
+  });
 
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
@@ -16,7 +18,3 @@ export default function FeaturedProducts() {
     </section>
   );
 }
-
-const products = getProducts({
-  featured: true,
-});

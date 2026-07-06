@@ -1,8 +1,10 @@
 import ProductGrid from "../product/ProductGrid";
-import { getNewArrivals, getProducts } from "@/services/product.service";
+import { getProducts } from "@/services/product.service";
 
 export default function NewArrivals() {
-  const products = getNewArrivals();
+  const products = getProducts({
+    newArrival: true,
+  });
 
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
