@@ -3,22 +3,28 @@ import { Product } from "@/types/product";
 
 export interface Product {
   id: number;
+
   name: string;
   slug: string;
   description: string;
+
   price: number;
-  category: string;
+  discountPrice?: number;
+
   brand: string;
+
+  gender: "Men" | "Women" | "Kids";
+  category: string;
+  collection: string;
+  sizes: string[];
+  colors: string[];
+  images: string[];
   stock: number;
   rating: number;
-  images: string[];
   reviewCount: number;
   isFeatured: boolean;
   isNewArrival: boolean;
   isTrending: boolean;
-  discountPrice?: number;
-  gender: "Men" | "Women" | "Kids";
-  collection: string;
 }
 
 export interface ProductFilters {
