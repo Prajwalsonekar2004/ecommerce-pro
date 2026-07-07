@@ -1,4 +1,5 @@
-import { Product } from "@/types/product";
+import { BRANDS } from "../enums/brands";
+import { CATEGORIES } from "../enums/categories";
 
 export const products: Product[] = [
   {
@@ -8,11 +9,17 @@ export const products: Product[] = [
     description: "Premium wireless headphones with crystal clear sound.",
     price: 2999,
     discountPrice: 2499,
-    category: "Electronics",
-    brand: "Sony",
+    category: CATEGORIES.TSHIRTS,
+    brand: BRANDS.ECOMMERCE_PRO,
     stock: 20,
     rating: 4.8,
-    image: "/products/headphones.jpg",
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["Black", "White"],
+    images: [
+      "/images/products/tshirts/tshirt-1-front.jpg",
+      "/images/products/tshirts/tshirt-1-back.jpg",
+    ],
+    reviewCount: 142,
     isFeatured: true,
     isNewArrival: true,
     isTrending: false,

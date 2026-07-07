@@ -1,5 +1,5 @@
-import { NewArrivals } from "@/components/home/NewArrivals";
-import { Product } from "@/types/product";
+import { Brand } from "@/constants/enums/brands";
+import { Category } from "@/constants/enums/categories";
 
 export interface Product {
   id: number;
@@ -11,10 +11,10 @@ export interface Product {
   price: number;
   discountPrice?: number;
 
-  brand: string;
+  brand: Brand;
+  category: Category;
 
   gender: "Men" | "Women" | "Kids";
-  category: string;
   collection: string;
   sizes: string[];
   colors: string[];
@@ -29,7 +29,7 @@ export interface Product {
 
 export interface ProductFilters {
   gender?: "Men" | "Women" | "Kids";
-  category?: string;
+  category: Category;
   collection?: string;
   featured?: boolean;
   newArrival?: boolean;
