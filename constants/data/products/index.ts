@@ -1,1 +1,3 @@
-export const products = [];
+import { tshirts } from "./tshirts";
+
+export const products = [...tshirts];
