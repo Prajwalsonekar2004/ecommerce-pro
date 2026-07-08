@@ -1,9 +1,18 @@
-export const heroSlides = [
-  {
-    id: 1,
-    image: "/images/hero/hero-1.jpg",
-    title: "Premium Fashion Collection",
-    Subtitle: "New Season",
-    buttonText: "Shop Now",
+export const heroContent = {
+  badge: "NEW COLLECTION 2026",
+
+  title: "Move Beyond Ordinary.",
+
+  description:
+    "Discover premium fashion designed for confidence, comfort and everyday style.",
+
+  primaryButton: {
+    label: "Shop Now",
+    href: "/products",
   },
-];
+
+  secondaryButton: {
+    label: "New Arrivals",
+    href: "/products/new-arrivals",
+  },
+};
