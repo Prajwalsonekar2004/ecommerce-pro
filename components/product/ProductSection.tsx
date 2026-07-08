@@ -1,3 +1,4 @@
+import SectionHeader from "../common/SectionHeader";
 import Link from "next/link";
 import { Product } from "@/types/product";
 import ProductGrid from "./ProductGrid";
@@ -17,18 +18,11 @@ export default function ProductSection({
 }: ProductSectionProps) {
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
-      <div className="mb-10 flex items-end justify-between">
-        <div>
-          <h2 className="text-4xl font-bold">{title}</h2>
-
-          <p className="mt-2 text-gray-500">{description}</p>
-        </div>
-
-        <Link href={href} className="font-medium hover:underline">
-          View All
-        </Link>
-      </div>
-
+      <SectionHeader
+      title={title}
+      description={description}
+      href={href}
+      />
       <ProductGrid products={products} />
     </section>
   );
