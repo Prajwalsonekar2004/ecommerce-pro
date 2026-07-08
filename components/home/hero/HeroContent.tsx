@@ -8,13 +8,11 @@ export default function HeroContent() {
         {heroContent.badge}
       </p>
 
-      <h1 className="text-5xl font-bold leading-tight md:text-7xl">
+      <h1 className="text-5xl font-extrabold leading-tight md:text-7xl">
         {heroContent.title}
-        <br />
-        Ordinary
       </h1>
 
-      <p className="mt-6 max-w-lg text-lg text-gray-600">
+      <p className="mt-6 max-w-lg text-lg leading-8 text-gray-600">
         {heroContent.description}
       </p>
 

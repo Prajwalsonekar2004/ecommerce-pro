@@ -4,7 +4,7 @@ import HeroImage from "./HeroImage";
 export default function Hero() {
   return (
     <section className="bg-white">
-      <div className="mx-auto flex min-h-[90vh] max-w-7xl flex-col-reverse items-center gap-14 px-6 py-12 lg:f1">
+      <div className="mx-auto flex min-h-[90vh] max-w-7xl flex-col-reverse items-center gap-16 px-6 py-12 lg:flex-r">
         <HeroContent />
         <HeroImage />
       </div>
