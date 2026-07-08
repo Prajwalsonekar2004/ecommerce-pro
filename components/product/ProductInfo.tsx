@@ -1,5 +1,6 @@
 import { Product } from "@/types/product";
-import formatCurrency from "@/lib/format";
+import ProductPrice from "./ProductPrice";
+import ProductRating from "./ProductRating";
 
 type ProductInfoProps = {
   product: Product;
@@ -12,19 +13,15 @@ export default function ProductInfo({ product }: ProductInfoProps) {
 
       <h3 className="mt-1 text-lg font-semibold">{product.name}</h3>
 
-      <div className="mt-2 flex item-centre gap-3">
-        {product.discountPrice && (
-          <span className="font-bold">
-            {formatCurrency(product.discountPrice)}
-          </span>
-        )}
+      <ProductPrice
+      price={product.price}
+      discountPrice={product.discountPrice}
+      />
 
-        <span
-          className={
-            product.discountPrice ? "text-gray-400 line-through" : "font-bold"
-          }
-        ></span>
-      </div>
+      <ProductRating
+      rating={product.rating}
+      reviewCount={product.reviewCount}
+      />
     </div>
   );
 }
