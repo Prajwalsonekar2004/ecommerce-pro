@@ -1,3 +1,4 @@
+import { products } from "@/constants/data/products";
 import { ProductFilters } from "@/types/product";
 
 export function getProducts(filters: ProductFilters = {}) {

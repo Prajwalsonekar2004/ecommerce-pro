@@ -29,7 +29,7 @@ export interface Product {
 
 export interface ProductFilters {
   gender?: "Men" | "Women" | "Kids";
-  category: Category;
+  category?: Category;
   collection?: string;
   featured?: boolean;
   newArrival?: boolean;

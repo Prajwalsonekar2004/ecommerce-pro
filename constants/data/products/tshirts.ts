@@ -1,5 +1,6 @@
-import { tshirts } from "./tshirts";
 import { Product } from "@/types/product";
+import { BRANDS } from "@/constants/enums/brands";
+import { CATEGORIES } from "@/constants/enums/categories";
 
 export const tshirts: Product[] = [
   {
@@ -9,9 +10,9 @@ export const tshirts: Product[] = [
     description: "Soft premium cotton t-shirt for everyday comfort.",
     price: 1499,
     discountPrice: 1199,
-    brand: "Ecommerce Pro",
+    brand: BRANDS.ECOMMERCE_PRO,
     gender: "Men",
-    category: "T-Shirts",
+    category: CATEGORIES.TSHIRTS,
     collection: "Essentials",
     sizes: ["S", "M", "L", "XL"],
     colors: ["Black", "White"],
