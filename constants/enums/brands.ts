@@ -4,6 +4,10 @@ export const BRANDS = {
   ADIDAS: "Adidas",
   PUMA: "Puma",
   LEVIS: "Levi's",
+  DENIM: "Denim",
+  FOX: "Fox",
+  SUD: "Sud",
+  HORNET: "Hornet",
 } as const;
 
 export type Brand = (typeof BRANDS)[keyof typeof BRANDS];

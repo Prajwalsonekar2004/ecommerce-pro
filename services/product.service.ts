@@ -30,3 +30,15 @@ export function getProducts(filters: ProductFilters = {}) {
     return true;
   });
 }
+
+export function getFeaturedProducts() {
+  return getProducts({ featured: true }).slice(0, 4);
+}
+
+export function getNewArrivals() {
+  return getProducts({ newArrival: true }).slice(0, 4);
+}
+
+export function getTrendingProducts() {
+  return getProducts({ trending: true }).slice(0, 4);
+}
