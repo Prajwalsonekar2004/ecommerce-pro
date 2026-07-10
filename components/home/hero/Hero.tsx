@@ -1,12 +1,16 @@
 import HeroContent from "./HeroContent";
-import HeroImage from "./HeroImage";
+import HeroCarousel from "./HeroCarousel";
+import HeroBackground from "./HeroBackground";
 
 export default function Hero() {
   return (
-    <section className="bg-white">
-      <div className="mx-auto flex min-h-[90vh] max-w-7xl flex-col-reverse items-center gap-16 px-6 py-12 lg:flex-r">
+    <section className="relative overflow-hidden bg-white">
+      <HeroBackground />
+
+      <div className="mx-auto flex min-h-screen max-w-[1440px] flex-col-reverse items-center gap-12 px-6 py-10 lg:flex-row lg:px-12">
         <HeroContent />
-        <HeroImage />
+
+        <HeroCarousel />
       </div>
     </section>
   );
