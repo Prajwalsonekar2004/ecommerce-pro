@@ -18,15 +18,15 @@ export default function HeroCarousel() {
       slidesPerView="auto"
       coverflowEffect={{
         rotate: 0,
-        stretch: 0,
-        depth: 120,
-        modifier: 2,
-        scale: 0.9,
+        stretch: -30,
+        depth: 180,
+        modifier: 1.6,
+        scale: 0.92,
         slideShadows: false,
       }}
     >
       {heroSlides.map((slide) => (
-        <SwiperSlide key={slide.id} className="!w-[320px] md:!w-[420px]">
+        <SwiperSlide key={slide.id} className="!w-[360px] md:!w-[520px]">
           <div className="relative aspect-[4/5] overflow-hidden rounded-[32px]">
             <Image
               src={slide.image}

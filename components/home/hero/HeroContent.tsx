@@ -14,6 +14,15 @@ export default function HeroContent() {
         Discover premium fashion designed for confidence, comfort and everyday
         style.
       </p>
+      <div className="mt-10 flex flex-wrap gap-4">
+        <button className="rounded-full bg-black px-8 py-4 text-white transition hover:scale-105 hover:bg-neutral-800">
+          Shop Now
+        </button>
+
+        <button className="rounded-full border border-black px-8 py-4 transition hover:bg-black hover:text-white">
+          Explore Collection
+        </button>
+      </div>
     </span>
   );
 }
