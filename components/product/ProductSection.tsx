@@ -18,12 +18,11 @@ export default function ProductSection({
 }: ProductSectionProps) {
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
-      <SectionHeader
-      title={title}
-      description={description}
-      href={href}
-      />
-      <ProductGrid products={products} />
+      <SectionHeader title={title} description={description} href={href} />
+
+      <ProductSlider>
+        <ProductGrid products={products} />
+      </ProductSlider>
     </section>
   );
 }
