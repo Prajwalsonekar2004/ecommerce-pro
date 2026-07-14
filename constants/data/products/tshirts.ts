@@ -4,87 +4,90 @@ import { CATEGORIES } from "@/constants/enums/categories";
 
 export const tshirts: Product[] = [
   {
-    id: 1,
-    name: "Essential Oversized T-Shirt",
-    slug: "essential-oversized-tshirt",
-    description: "Soft premium cotton t-shirt for coding lovers.",
-    price: 1499,
-    discountPrice: 1199,
-    brand: BRANDS.NIKE,
-    gender: "Men",
+    id: 1001,
+    name: "Essential Oversized Tee",
+    slug: "essential-oversized-tee-black",
+
+    description:
+      "Premium heavyweight oversized t-shirt crafted for everyday comfort.",
+
+    brand: BRANDS.BLACKHEAD,
+
     category: CATEGORIES.TSHIRTS,
-    collection: "Summer 2026",
+
+    gender: "Men",
+
+    collection: "Essentials",
+
+    price: 1999,
+
+    discountPrice: 1499,
+
     sizes: ["S", "M", "L", "XL"],
-    colors: ["Black", "White"],
-    images: ["/images/products/tshirts/tshirt-1.jpg"],
-    stock: 25,
-    rating: 4.8,
-    reviewCount: 142,
+
+    colors: ["Black", "White", "Beige"],
+
+    images: [
+      "/images/products/tshirts/essential-oversized/front.webp",
+      "/images/products/tshirts/essential-oversized/back.webp",
+      "/images/products/tshirts/essential-oversized/model.webp",
+      "/images/products/tshirts/essential-oversized/side.webp",
+    ],
+
+    stock: 34,
+
+    rating: 4.9,
+
+    reviewCount: 248,
+
     isFeatured: true,
+
     isNewArrival: true,
+
     isTrending: true,
   },
   {
-    id: 2,
-    name: "Essential Oversized T-Shirt",
-    slug: "essential-oversized-tshirt",
-    description: "Soft premium cotton t-shirt for coding lovers.",
-    price: 1699,
-    discountPrice: 1199,
-    brand: BRANDS.PUMA,
-    gender: "Men",
-    category: CATEGORIES.TSHIRTS,
-    collection: "Summer 2026",
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["Black", "White"],
-    images: ["/images/products/tshirts/tshirt-2.jpg"],
-    stock: 25,
-    rating: 4.7,
-    reviewCount: 144,
-    isFeatured: true,
-    isNewArrival: true,
-    isTrending: true,
-  },
-  {
-    id: 3,
-    name: "Essential Oversized T-Shirt",
-    slug: "essential-oversized-tshirt",
-    description: "Soft premium cotton t-shirt for coding lovers.",
-    price: 1799,
-    discountPrice: 1199,
-    brand: BRANDS.ADIDAS,
-    gender: "Men",
-    category: CATEGORIES.TSHIRTS,
-    collection: "Summer 2026",
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["Black", "White"],
-    images: ["/images/products/tshirts/tshirt-3.jpg"],
-    stock: 25,
-    rating: 4.5,
-    reviewCount: 142,
-    isFeatured: true,
-    isNewArrival: true,
-    isTrending: true,
-  },
-  {
-    id: 4,
-    name: "Essential Oversized T-Shirt",
-    slug: "essential-oversized-tshirt",
-    description: "Soft premium cotton t-shirt for coding lovers.",
-    price: 2999,
-    discountPrice: 1199,
-    brand: BRANDS.LEVIS,
-    gender: "Men",
-    category: CATEGORIES.TSHIRTS,
-    collection: "Summer 2026",
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["Black", "White"],
-    images: ["/images/products/tshirts/tshirt-4.jpg"],
-    stock: 25,
-    rating: 4.8,
-    reviewCount: 180,
-    isFeatured: true,
-    isNewArrival: true,
-    isTrending: true,
-  },
+    id:1002,
+
+    name:"Classic Heavy Tee",
+
+    slug:"classic-heavy-tee-white",
+
+    description:"Minimal heavyweight cotton t-shirt designed for daily wear.",
+
+    brand:BRANDS.BLACKHEAD,
+
+    category:CATEGORIES.TSHIRTS,
+
+    gender:"Men",
+
+    collection:"Core",
+
+    price:1799,
+
+    discountPrice:1399,
+
+    sizes:["S","M","L","XL"],
+
+    colors:["White","Black"],
+
+    images:[
+"/images/products/tshirts/classic-heavy/front.webp",
+"/images/products/tshirts/classic-heavy/back.webp",
+"/images/products/tshirts/classic-heavy/model.webp",
+"/images/products/tshirts/classic-heavy/side.webp",
+],
+
+stock:52,
+
+rating:4.8,
+
+reviewCount:193,
+
+isFeatured:true,
+
+isNewArrival:false,
+
+isTrending:true,
+},
 ];
