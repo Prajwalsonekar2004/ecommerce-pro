@@ -1,4 +1,5 @@
-import ProductSection from "../product/ProductSection";
+import ProductCarousel from "../product/ProductCarousel";
+import SectionHeader from "../common/SectionHeader";
 import { getProducts } from "@/services/product.service";
 
 export default function FeaturedProducts() {
@@ -7,11 +8,14 @@ export default function FeaturedProducts() {
   });
 
   return (
-    <ProductSection
-      title="Featured Products"
-      description="Our most popular styles."
-      href="products"
-      products={products}
-    />
+    <section className="mx-auto max-w-[1440px] px-8 py-24">
+      <SectionHeader
+        title="Featured Products"
+        description="Handpicked styles loved by thousands."
+        href="/products"
+      />
+
+      <ProductCarousel products={products} />
+    </section>
   );
 }

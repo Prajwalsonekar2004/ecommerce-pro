@@ -12,8 +12,8 @@ type ProductCardProps = {
 export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Link href={`/products/${product.slug}`}>
-      <article className="group">
-        <div className="relative">
+      <article className="group transition-all duration-500 hover:-translate-y-2">
+        <div className="group-hover:scale-105 duration-700">
           <ProductBadge discountPrice={product.discountPrice} />
 
           <ProductImage product={product} />

@@ -14,13 +14,13 @@ export default function SectionHeader({
   return (
     <div className="mb-10 flex items-end justify-between">
       <div>
-        <h2 className="text-3xl font-bold md:text-4xl">{title}</h2>
+        <h2 className="text-5xl font-black tracking-tight">{title}</h2>
 
-        <p className="mt-2 text-gray-500">{description}</p>
+        <p className="mt-3 text-lg text-gray-500">{description}</p>
       </div>
 
       {href && (
-        <Link href={href} className="text-sm font-semibold hover:underline">
+        <Link href={href} className="font-semibold hover:underline transition">
           View All
         </Link>
       )}

@@ -1,4 +1,5 @@
-import ProductSection from "../product/ProductSection";
+import SectionHeader from "../common/SectionHeader";
+import ProductCarousel from "../product/ProductCarousel";
 import { getProducts } from "@/services/product.service";
 
 export default function NewArrivals() {
@@ -7,11 +8,14 @@ export default function NewArrivals() {
   });
 
   return (
-    <ProductSection
-      title="New Arrivals"
-      description="Fresh arrivals just for you"
-      href="/products/new-arrivals"
-      products={products}
-    />
+    <section className="mx-auto max-w-[1440px] px-8 py-24">
+      <SectionHeader
+        title="New Arrivals"
+        description="Fresh drops this week."
+        href="/products/new"
+      />
+
+      <ProductCarousel products={products} />
+    </section>
   );
 }
