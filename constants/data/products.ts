@@ -1,4 +1,4 @@
-export * from "./products";
+export { products } from "./products";
 
 // import { BRANDS } from "../enums/brands";
 // import { CATEGORIES } from "../enums/categories";
