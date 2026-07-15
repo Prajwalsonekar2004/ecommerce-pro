@@ -27,12 +27,7 @@ export const tshirts: Product[] = [
 
     colors: ["Black", "White", "Beige"],
 
-    images: [
-      "/images/products/tshirts/essential-oversized/front.webp",
-      "/images/products/tshirts/essential-oversized/back.webp",
-      "/images/products/tshirts/essential-oversized/model.webp",
-      "/images/products/tshirts/essential-oversized/side.webp",
-    ],
+    images: ["/images/products/placeholder.jpg"],
 
     stock: 34,
 
@@ -47,47 +42,42 @@ export const tshirts: Product[] = [
     isTrending: true,
   },
   {
-    id:1002,
+    id: 1002,
 
-    name:"Classic Heavy Tee",
+    name: "Classic Heavy Tee",
 
-    slug:"classic-heavy-tee-white",
+    slug: "classic-heavy-tee-white",
 
-    description:"Minimal heavyweight cotton t-shirt designed for daily wear.",
+    description: "Minimal heavyweight cotton t-shirt designed for daily wear.",
 
-    brand:BRANDS.BLACKHEAD,
+    brand: BRANDS.BLACKHEAD,
 
-    category:CATEGORIES.TSHIRTS,
+    category: CATEGORIES.TSHIRTS,
 
-    gender:"Men",
+    gender: "Men",
 
-    collection:"Core",
+    collection: "Core",
 
-    price:1799,
+    price: 1799,
 
-    discountPrice:1399,
+    discountPrice: 1399,
 
-    sizes:["S","M","L","XL"],
+    sizes: ["S", "M", "L", "XL"],
 
-    colors:["White","Black"],
+    colors: ["White", "Black"],
 
-    images:[
-"/images/products/tshirts/classic-heavy/front.webp",
-"/images/products/tshirts/classic-heavy/back.webp",
-"/images/products/tshirts/classic-heavy/model.webp",
-"/images/products/tshirts/classic-heavy/side.webp",
-],
+    images: ["/images/products/placeholder.jpg"],
 
-stock:52,
+    stock: 52,
 
-rating:4.8,
+    rating: 4.8,
 
-reviewCount:193,
+    reviewCount: 193,
 
-isFeatured:true,
+    isFeatured: true,
 
-isNewArrival:false,
+    isNewArrival: false,
 
-isTrending:true,
-},
+    isTrending: true,
+  },
 ];

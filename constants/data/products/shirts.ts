@@ -73,7 +73,7 @@ export const shirts: Product[] = [
     description: "Soft premium cotton shirt for mens.",
     price: 800,
     discountPrice: 200,
-    brand: BRANDS.LEVIS,
+    brand: BRANDS.BLACKHEAD,
     gender: "Men",
     category: CATEGORIES.SHIRTS,
     collection: "Summer 2026",

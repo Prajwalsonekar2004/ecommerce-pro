@@ -6,7 +6,7 @@ type ProductImageProps = {
 };
 
 export default function ProductImage({ product }: ProductImageProps) {
-  const image = product.images?.[0] ?? "/images/products/placeholder.webp";
+  const image = product.images?.[0] || "/images/products/placeholder.jpg";
 
   return (
     <div className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-gray-100">
