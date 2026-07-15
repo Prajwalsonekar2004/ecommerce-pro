@@ -4,7 +4,7 @@ import { CATEGORIES } from "@/constants/enums/categories";
 
 export const hoodies: Product[] = [
   {
-    id: 1,
+    id: 4001,
     name: "Wow Hoodies",
     slug: "essential-hoodie",
     description: "Standard Hoodie for mens and womens.",
@@ -25,7 +25,7 @@ export const hoodies: Product[] = [
     isTrending: true,
   },
   {
-    id: 2,
+    id: 4002,
     name: "Wow Hoodies",
     slug: "essential-hoodie",
     description: "Standard Hoodie for mens and womens.",
@@ -46,7 +46,7 @@ export const hoodies: Product[] = [
     isTrending: true,
   },
   {
-    id: 3,
+    id: 4003,
     name: "Wow Hoodies",
     slug: "essential-hoodie",
     description: "Standard Hoodie for mens and womens.",
@@ -67,7 +67,7 @@ export const hoodies: Product[] = [
     isTrending: true,
   },
   {
-    id: 4,
+    id: 4004,
     name: "Wow Hoodies",
     slug: "essential-hoodie",
     description: "Standard Hoodie for mens and womens.",
