@@ -11,7 +11,7 @@ export const tshirts: Product[] = [
     description:
       "Premium heavyweight oversized t-shirt crafted for everyday comfort.",
 
-    brand: BRANDS.BLACKHEAD,
+    brand: BRANDS.BLACKHEADFASHION,
 
     category: CATEGORIES.TSHIRTS,
 
@@ -50,7 +50,7 @@ export const tshirts: Product[] = [
 
     description: "Minimal heavyweight cotton t-shirt designed for daily wear.",
 
-    brand: BRANDS.BLACKHEAD,
+    brand: BRANDS.BLACKHEADFASHION,
 
     category: CATEGORIES.TSHIRTS,
 

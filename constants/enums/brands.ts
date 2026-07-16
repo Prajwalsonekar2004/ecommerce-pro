@@ -1,5 +1,5 @@
 export const BRANDS = {
-  BLACKHEAD: "Blackhead",
+  BLACKHEADFASHION: "Blackheadfashion",
   NIKE: "Nike",
   ADIDAS: "Adidas",
   PUMA: "Puma",
