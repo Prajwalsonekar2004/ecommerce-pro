@@ -1,3 +1,18 @@
+enum Size {
+  XS
+  S
+  M
+  L
+  XL
+  XXL
+}
+
+enum Gender {
+  MEN
+  WOMEN
+  KIDS
+}
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -5,4 +20,89 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Brand {
+  id       String  @id @default(cuid())
+  name     String  @unique
+  slug     String  @unique
+  logo     String?
+  isActive Boolean @default(true)
+
+  products Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id       String  @id @default(cuid())
+  name     String  @unique
+  slug     String  @unique
+  image    String?
+  isActive Boolean @default(true)
+
+  products Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id             String         @id @default(cuid())
+  name           String
+  slug           String         @unique
+  description    String
+  sku            String         @unique
+  thumbnail      String?
+  price          Decimal        @db.Decimal(10, 2)
+  comparePrice   Decimal?       @db.Decimal(10, 2)
+  gender         Gender
+  collection     String?
+  stock          Int
+  rating         Float          @default(0)
+  reviewCount    Int            @default(0)
+  seoTitle       String?
+  seoDescription String?
+  isFeatured     Boolean        @default(false)
+  isNewArrival   Boolean        @default(false)
+  isTrending     Boolean        @default(false)
+  isActive       Boolean        @default(true)
+  brandId        String
+  categoryId     String
+  brand          Brand          @relation(fields: [brandId], references: [id])
+  category       Category       @relation(fields: [categoryId], references: [id])
+  images         ProductImage[]
+  sizes          ProductSize[]
+  colors         ProductColor[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProductImage {
+  id           String  @id @default(cuid())
+  url          String
+  alt          String?
+  isPrimary    Boolean @default(false)
+  productId    String
+  displayOrder Int     @default(0)
+  product      Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model ProductColor {
+  id           String  @id @default(cuid())
+  name         String
+  hexCode      String
+  productId    String
+  displayOrder Int     @default(0)
+  product      Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model ProductSize {
+  id        String  @id @default(cuid())
+  size      Size
+  quantity  Int
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
