@@ -35,7 +35,7 @@ export function mapProduct(product: PrismaProduct): Product {
     reviewCount: product.reviewCount,
     images: product.images.map((img) => img.url),
     colors: product.colors.map((c) => c.name),
-    sizes: product.sizes.map((s) => s.size),
+    sizes: product.sizes.map((s) => s.size.toString()),
     isFeatured: product.isFeatured,
     isNewArrival: product.isNewArrival,
     isTrending: product.isTrending,

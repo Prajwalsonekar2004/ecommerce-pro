@@ -9,19 +9,27 @@ export async function findProducts(filters?: {
     where: {
       isActive: true,
       ...(filters?.featured && { isFeatured: true }),
-      ...(filters?.newArrival && { isNewArrivals: true }),
+      ...(filters?.newArrival && { isNewArrival: true }),
       ...(filters?.trending && { isTrending: true }),
     },
 
     include: {
       brand: true,
       category: true,
-      images: { orderBy: { displayOrder: "asc" } },
-      sizes: true,
-    },
 
-    orderBy: {
-      createdAt: "desc",
+      images: {
+        orderBy: {
+          displayOrder: "asc",
+        },
+      },
+
+      colors: {
+        orderBy: {
+          displayOrder: "asc",
+        },
+      },
+
+      sizes: true,
     },
   });
 }
