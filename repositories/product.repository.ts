@@ -33,3 +33,31 @@ export async function findProducts(filters?: {
     },
   });
 }
+
+export async function findProductBySlug(slug: string) {
+  return prisma.product.findUnique({
+    where: {
+      slug,
+      isActive: true,
+    },
+
+    include: {
+      brand: true,
+      category: true,
+
+      images: {
+        orderBy: {
+          displayOrder: "asc",
+        },
+      },
+
+      colors: {
+        orderBy: {
+          displayOrder: "asc",
+        },
+      },
+
+      sizes: true,
+    },
+  });
+}

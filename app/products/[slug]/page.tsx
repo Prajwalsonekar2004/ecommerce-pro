@@ -1,34 +1,28 @@
-import {
-  ProductGallery,
-  ProductInfo,
-  ProductActions,
-  ProductDescription,
-  RelatedProducts,
-} from "@/components/product/details";
+import { notFound } from "next/navigation";
+import { getProductBySlug } from "@/services/product.service";
 
-type Props = {
+interface Props {
   params: Promise<{
     slug: string;
   }>;
-};
+}
 
-export default async function ProductDetailsPage({ params, }: Props) {
+export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
 
+  const product = await getProductBySlug(slug);
+
+  if (!product) {
+    notFound();
+  }
+
   return (
-    <main className="mx-auto max-w-[1440px] px-8 py-20 lg:px-12">
-      <section className="grid gap-12 lg:grid-cols-2">
-        <ProductGallery />
+    <main className="mx-auto max-w-[1440px] px-6 py-10">
+      <h1 className="text-4xl font-bold">{product.name}</h1>
 
-        <div className="space-y-8">
-          <ProductInfo slug={slug}/>
-          <ProductActions />
-        </div>
-      </section>
+      <p className="mt-2 text-neutral-500">{product.brand}</p>
 
-      <ProductDescription />
-
-      <RelatedProducts />
+      <p className="mt-6">{product.description}</p>
     </main>
   );
 }
