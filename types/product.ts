@@ -2,20 +2,20 @@ import { Brand } from "@/constants/enums/brands";
 import { Category } from "@/constants/enums/categories";
 
 export interface Product {
-  id: number;
+  id: string;
 
   name: string;
   slug: string;
   description: string;
 
   price: number;
-  discountPrice?: number;
+  comparePrice?: number;
 
-  brand: Brand;
-  category: Category;
+  brand: string;
+  category: string;
 
   gender: "Men" | "Women" | "Kids";
-  collection: string;
+  collection?: string;
   sizes: string[];
   colors: string[];
   images: string[];

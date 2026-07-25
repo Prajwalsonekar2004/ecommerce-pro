@@ -1,9 +1,9 @@
-import SectionHeader from "../common/SectionHeader";
 import ProductCarousel from "../product/ProductCarousel";
+import SectionHeader from "../common/SectionHeader";
 import { getProducts } from "@/services/product.service";
 
-export default function NewArrivals() {
-  const products = getProducts({
+export default async function NewArrivals() {
+  const products = await getProducts({
     newArrival: true,
   });
 

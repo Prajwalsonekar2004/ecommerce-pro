@@ -2,8 +2,8 @@ import ProductCarousel from "../product/ProductCarousel";
 import SectionHeader from "../common/SectionHeader";
 import { getProducts } from "@/services/product.service";
 
-export default function FeaturedProducts() {
-  const products = getProducts({
+export default async function FeaturedProducts() {
+  const products = await getProducts({
     featured: true,
   });
 
