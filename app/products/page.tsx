@@ -1,5 +1,8 @@
 import { getAllProducts } from "@/services/product.service";
 import ProductGrid from "@/components/product/ProductGrid";
+import ProductToolbar from "@/components/product/ProductToolbar";
+import FilterSidebar from "@/components/product/FilterSidebar";
+import Pagination from "@/components/product/Pagination";
 
 export default async function ProductsPage() {
   const products = await getAllProducts();
@@ -14,9 +17,18 @@ export default async function ProductsPage() {
 
   return (
     <main className="mx-auto max-w-[1440px] px-6 py-10">
-      <h1 className="mb-8 text-4xl font-bold">All Products</h1>
+      <ProductToolbar totalProducts={products.length} />
 
-      <ProductGrid products={products} />
+      <div className="grid grid-cols-12 gap-8">
+        <aside className="col-span-3">
+          <FilterSidebar />
+        </aside>
+        <section className="col-span-9">
+          <ProductGrid products={products} />
+        </section>
+      </div>
+
+      <Pagination />
     </main>
   );
 }
