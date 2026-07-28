@@ -1,9 +1,22 @@
-export default function ProductsPage() {
-  return (
-    <main className="mx-auto max-w-[1440px] px-8 py-20">
-      <h1 className="text-5xl font-bold">All Products</h1>
+import { getAllProducts } from "@/services/product.service";
+import ProductGrid from "@/components/product/ProductGrid";
 
-      <p className="mt-4 text-neutral-500">Browse our letest collection.</p>
+export default async function ProductsPage() {
+  const products = await getAllProducts();
+
+  if (products.length === 0) {
+    return (
+      <main className="mx-auto max-w-[1440px] px-6 py-20 text-center">
+        <h2 className="text-2xl font-semibold">No products found</h2>
+      </main>
+    );
+  }
+
+  return (
+    <main className="mx-auto max-w-[1440px] px-6 py-10">
+      <h1 className="mb-8 text-4xl font-bold">All Products</h1>
+
+      <ProductGrid products={products} />
     </main>
   );
 }

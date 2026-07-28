@@ -1,5 +1,24 @@
 import { prisma } from "@/lib/prisma";
 
+const productInclude = {
+  brand: true,
+  category: true,
+
+  images: {
+    orderBy: {
+      displayOrder: "asc",
+    },
+  },
+
+  colors: {
+    orderBy: {
+      displayOrder: "asc",
+    },
+  },
+
+  sizes: true,
+} as const;
+
 export async function findProducts(filters?: {
   featured?: boolean;
   newArrival?: boolean;
@@ -13,23 +32,10 @@ export async function findProducts(filters?: {
       ...(filters?.trending && { isTrending: true }),
     },
 
-    include: {
-      brand: true,
-      category: true,
+    include: productInclude,
 
-      images: {
-        orderBy: {
-          displayOrder: "asc",
-        },
-      },
-
-      colors: {
-        orderBy: {
-          displayOrder: "asc",
-        },
-      },
-
-      sizes: true,
+    orderBy: {
+      createdAt: "desc",
     },
   });
 }
@@ -41,23 +47,20 @@ export async function findProductBySlug(slug: string) {
       isActive: true,
     },
 
-    include: {
-      brand: true,
-      category: true,
+    include: productInclude,
+  });
+}
 
-      images: {
-        orderBy: {
-          displayOrder: "asc",
-        },
-      },
+export async function findAllProducts() {
+  return prisma.product.findMany({
+    where: {
+      isActive: true,
+    },
 
-      colors: {
-        orderBy: {
-          displayOrder: "asc",
-        },
-      },
+    include: productInclude,
 
-      sizes: true,
+    orderBy: {
+      createdAt: "desc",
     },
   });
 }

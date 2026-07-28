@@ -1,6 +1,7 @@
 import { findProductBySlug } from "@/repositories/product.repository";
 import { mapProduct } from "@/lib/mappers/product.mapper";
 import { findProducts } from "@/repositories/product.repository";
+import { findAllProducts } from "@/repositories/product.repository";
 
 export async function getProducts(filters?: {
   featured?: boolean;
@@ -17,4 +18,10 @@ export async function getProductBySlug(slug: string) {
 
   if (!product) return null;
   return mapProduct(product);
+}
+
+export async function getAllProducts() {
+  const products = await findAllProducts();
+
+  return products.map(mapProduct);
 }
