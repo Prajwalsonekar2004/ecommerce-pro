@@ -1,3 +1,6 @@
+import { mapProduct } from "@/lib/mappers/product.mapper";
+import { products } from "./../constants/data/products/index";
+import { ProductFilters } from "./../types/product";
 import { prisma } from "@/lib/prisma";
 
 const productInclude = {
@@ -63,4 +66,21 @@ export async function findAllProducts() {
       createdAt: "desc",
     },
   });
+}
+
+export async function findProductsWithFilters(filters: ProductFilters) {
+  return prisma.product.findMany({
+    where: {
+      isActive: true,
+    },
+    include: productInclude,
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+}
+
+export async function searchProducts(filters: ProductFilters) {
+  const products = await findProductsWithFilters(filters);
+  return products.map(mapProduct);
 }
