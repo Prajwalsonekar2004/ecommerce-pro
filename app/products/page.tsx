@@ -1,11 +1,40 @@
-import { getAllProducts } from "@/services/product.service";
 import ProductGrid from "@/components/product/ProductGrid";
 import ProductToolbar from "@/components/product/ProductToolbar";
 import FilterSidebar from "@/components/product/FilterSidebar";
 import Pagination from "@/components/product/Pagination";
 
-export default async function ProductsPage() {
-  const products = await getAllProducts();
+import { searchProducts } from "@/services/product.service";
+import { ProductFilters } from "@/types/product-filter";
+
+interface ProductsPageProps {
+  searchParams: Promise<{
+    search?: string;
+    category?: string;
+    brand?: string;
+    color?: string;
+    size?: string;
+    sort?: ProductFilters["sort"];
+    page?: string;
+  }>;
+}
+
+export default async function ProductsPage({
+  searchParams,
+}: ProductsPageProps) {
+  const params = await searchParams;
+
+  const filters: ProductFilters = {
+    search: params.search,
+    category: params.category,
+    brand: params.brand,
+    color: params.color,
+    size: params.size,
+    sort: params.sort,
+    page: Number(params.page ?? 1),
+    limit: 12,
+  };
+
+  const products = await searchProducts(filters);
 
   if (products.length === 0) {
     return (
@@ -23,6 +52,7 @@ export default async function ProductsPage() {
         <aside className="col-span-3">
           <FilterSidebar />
         </aside>
+
         <section className="col-span-9">
           <ProductGrid products={products} />
         </section>

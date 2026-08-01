@@ -11,5 +11,5 @@ export interface ProductFilters {
   trending?: boolean;
   page?: number;
   limit?: number;
-  sort: "newest" | "oldest" | "price-low" | "price-high" | "name";
+  sort?: "newest" | "oldest" | "price-low" | "price-high" | "name";
 }

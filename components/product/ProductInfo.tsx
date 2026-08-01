@@ -15,7 +15,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
 
       <ProductPrice
       price={product.price}
-      discountPrice={product.discountPrice}
+      comparePrice={product.comparePrice}
       />
 
       <ProductRating

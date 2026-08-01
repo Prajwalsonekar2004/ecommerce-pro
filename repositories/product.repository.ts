@@ -1,7 +1,5 @@
-import { mapProduct } from "@/lib/mappers/product.mapper";
-import { products } from "./../constants/data/products/index";
-import { ProductFilters } from "./../types/product";
 import { prisma } from "@/lib/prisma";
+import { ProductFilters } from "@/types/product-filter";
 
 const productInclude = {
   brand: true,
@@ -21,6 +19,25 @@ const productInclude = {
 
   sizes: true,
 } as const;
+
+function getOrderBy(sort?: ProductFilters["sort"]) {
+  switch (sort) {
+    case "price-low":
+      return { price: "asc" as const };
+
+    case "price-high":
+      return { price: "desc" as const };
+
+    case "oldest":
+      return { createdAt: "asc" as const };
+
+    case "name":
+      return { name: "asc" as const };
+
+    default:
+      return { createdAt: "desc" as const };
+  }
+}
 
 export async function findProducts(filters?: {
   featured?: boolean;
@@ -47,7 +64,6 @@ export async function findProductBySlug(slug: string) {
   return prisma.product.findUnique({
     where: {
       slug,
-      isActive: true,
     },
 
     include: productInclude,
@@ -72,15 +88,39 @@ export async function findProductsWithFilters(filters: ProductFilters) {
   return prisma.product.findMany({
     where: {
       isActive: true,
-    },
-    include: productInclude,
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-}
 
-export async function searchProducts(filters: ProductFilters) {
-  const products = await findProductsWithFilters(filters);
-  return products.map(mapProduct);
+      ...(filters.search && {
+        OR: [
+          {
+            name: {
+              contains: filters.search,
+              mode: "insensitive",
+            },
+          },
+          {
+            description: {
+              contains: filters.search,
+              mode: "insensitive",
+            },
+          },
+        ],
+      }),
+
+      ...(filters.category && {
+        category: {
+          slug: filters.category,
+        },
+      }),
+
+      ...(filters.brand && {
+        brand: {
+          slug: filters.brand,
+        },
+      }),
+    },
+
+    include: productInclude,
+
+    orderBy: getOrderBy(filters.sort),
+  });
 }
