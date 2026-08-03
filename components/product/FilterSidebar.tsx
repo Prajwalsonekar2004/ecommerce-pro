@@ -1,5 +1,4 @@
-import BrandFilter from "./BrandFilter";
-import CategoryFilter from "./CategoryFilter";
+import FilterGroup from "./FilterGroup";
 import PriceFilter from "./PriceFilter";
 
 interface Props {
@@ -16,13 +15,13 @@ interface Props {
   }[];
 }
 
-export default function FilterSidebar({ brands, categories, }: Props) {
+export default function FilterSidebar({ brands, categories }: Props) {
   return (
     <aside className="rounded-2xl border border-gray-200 p-6 space-y-8">
-      <CategoryFilter categories={categories} />
+      <FilterGroup title="Category" queryKey="category" options={categories} />
 
-      <BrandFilter brands={brands} />
-      
+      <FilterGroup title="Brand" queryKey="brand" options={brands} />
+
       <PriceFilter />
     </aside>
   );
