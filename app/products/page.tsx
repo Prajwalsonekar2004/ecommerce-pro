@@ -5,6 +5,7 @@ import Pagination from "@/components/product/Pagination";
 
 import { searchProducts } from "@/services/product.service";
 import { ProductFilters } from "@/types/product-filter";
+import { getBrands } from "@/services/brand.service";
 
 interface ProductsPageProps {
   searchParams: Promise<{
@@ -35,6 +36,7 @@ export default async function ProductsPage({
   };
 
   const products = await searchProducts(filters);
+  const brands = await getBrands();
 
   if (products.length === 0) {
     return (
@@ -50,7 +52,7 @@ export default async function ProductsPage({
 
       <div className="grid grid-cols-12 gap-8">
         <aside className="col-span-3">
-          <FilterSidebar />
+          <FilterSidebar brands={brands}/>
         </aside>
 
         <section className="col-span-9">
