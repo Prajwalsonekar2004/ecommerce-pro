@@ -13,6 +13,8 @@ interface ProductsPageProps {
     search?: string;
     category?: string;
     brand?: string;
+    minPrice?: string;
+    maxPrice?: string;
     color?: string;
     size?: string;
     sort?: ProductFilters["sort"];
@@ -29,6 +31,8 @@ export default async function ProductsPage({
     search: params.search,
     category: params.category,
     brand: params.brand,
+    minPrice: params.minPrice ? Number(params.minPrice) :undefined,
+    maxPrice: params.maxPrice ? Number(params.maxPrice) :undefined,
     color: params.color,
     size: params.size,
     sort: params.sort,

@@ -1,5 +1,6 @@
 import BrandFilter from "./BrandFilter";
 import CategoryFilter from "./CategoryFilter";
+import PriceFilter from "./PriceFilter";
 
 interface Props {
   brands: {
@@ -21,6 +22,8 @@ export default function FilterSidebar({ brands, categories, }: Props) {
       <CategoryFilter categories={categories} />
 
       <BrandFilter brands={brands} />
+      
+      <PriceFilter />
     </aside>
   );
 }

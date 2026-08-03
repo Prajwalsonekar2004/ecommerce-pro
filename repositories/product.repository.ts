@@ -117,6 +117,20 @@ export async function findProductsWithFilters(filters: ProductFilters) {
           slug: filters.brand,
         },
       }),
+
+      ...(filters.minPrice !== undefined ||
+        filters.maxPrice !== undefined ? {
+          price: {
+            ...(filters.minPrice !== undefined && {
+              gte: filters.minPrice,
+            }),
+
+            ...(filters.maxPrice !== undefined && {
+              lte: filters.maxPrice,
+            }),
+          },
+        }
+      :{}),
     },
 
     include: productInclude,
