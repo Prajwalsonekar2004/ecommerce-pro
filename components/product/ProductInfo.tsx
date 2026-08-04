@@ -8,19 +8,36 @@ type ProductInfoProps = {
 
 export default function ProductInfo({ product }: ProductInfoProps) {
   return (
-    <div className="mt-4">
-      <p className="text-sm text-gray-500">{product.brand}</p>
+    <div className="space-y-3 p-5">
+      <p
+        className="
+          text-xs
+          font-semibold
+          uppercase
+          tracking-[0.25em]
+          text-neutral-500
+        "
+      >
+        {product.brand}
+      </p>
 
-      <h3 className="mt-1 text-lg font-semibold">{product.name}</h3>
+      <h3
+        className="
+          line-clamp-2
+          text-xl
+          font-semibold
+          leading-snug
+          text-neutral-900
+        "
+      >
+        {product.name}
+      </h3>
 
-      <ProductPrice
-      price={product.price}
-      comparePrice={product.comparePrice}
-      />
+      <ProductPrice price={product.price} comparePrice={product.comparePrice} />
 
       <ProductRating
-      rating={product.rating}
-      reviewCount={product.reviewCount}
+        rating={product.rating}
+        reviewCount={product.reviewCount}
       />
     </div>
   );
