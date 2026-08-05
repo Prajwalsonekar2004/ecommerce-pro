@@ -9,7 +9,7 @@ export default function ProductRating({
 }: ProductRatingProps) {
   return (
     <p className="mt-2 text-sm text-gray-500">
-      ⭐ {rating} ({reviewCount} Reviews)
+      Rating {rating} ({reviewCount} Reviews)
     </p>
   );
 }

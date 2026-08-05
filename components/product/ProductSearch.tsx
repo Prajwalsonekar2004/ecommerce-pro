@@ -34,7 +34,7 @@ export default function ProductSearch() {
           }
         }}
         placeholder="Search products..."
-        className="w-72 rounden-lg border px-4 py-2"
+        className="h-14 w-full rounded-full border border-neutral-300 bg-white px-14 text-base shadow-sm focus:border-black focus:ring-0"
       />
 
       <button

@@ -77,6 +77,7 @@ export default function ProductToolbar() {
               pl-11
               pr-5
               text-sm
+              placeholder:text-neutral-400
               shadow-sm
               outline-none
               transition-all
@@ -91,7 +92,7 @@ export default function ProductToolbar() {
         {/* Sort */}
 
         <select
-          defaultValue={searchParams.get("sort") ?? "newest"}
+          value={searchParams.get("sort") ?? "newest"}
           onChange={(e) => handleSort(e.target.value)}
           className="
             h-12
@@ -101,6 +102,7 @@ export default function ProductToolbar() {
             bg-white
             px-5
             text-sm
+            text-neutral-700
             shadow-sm
             outline-none
             transition-all

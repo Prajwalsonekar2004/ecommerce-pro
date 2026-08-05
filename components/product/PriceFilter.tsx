@@ -24,7 +24,7 @@ export default function PriceFilter() {
       <div className="space-y-2">
         <button
           onClick={() => changePrice(0, 1000)}
-          className="block w-full rounded-lg border p-2 text-left hover:bg-gray-50"
+          className="block w-full rounded-xl border border-neutral-200 p-3 text-left text-sm text-neutral-700 transition hover:border-black hover:bg-neutral-50"
         >
           ₹1000 - ₹2500
         </button>

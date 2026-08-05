@@ -49,26 +49,6 @@ export default async function ProductsPage({
 
   return (
     <main className="min-h-screen bg-white">
-      {/* Hero */}
-      <section className="border-b border-neutral-200 bg-neutral-50">
-        <div className="mx-auto max-w-[1440px] px-6 py-14 lg:px-10">
-          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-neutral-500">
-            BlackHeadFashion
-          </p>
-
-          <h1 className="mt-4 text-4xl font-black tracking-tight text-neutral-900 md:text-5xl lg:text-6xl">
-            Premium Collection
-          </h1>
-
-          <p className="mt-5 max-w-2xl text-base leading-8 text-neutral-600 md:text-lg">
-            Discover timeless fashion designed for confidence, comfort and
-            everyday style. Explore our latest premium essentials crafted with
-            quality fabrics and modern silhouettes.
-          </p>
-        </div>
-      </section>
-
-      {/* Products */}
       <section className="mx-auto max-w-[1440px] px-6 py-10 lg:px-10">
         <ProductToolbar />
 

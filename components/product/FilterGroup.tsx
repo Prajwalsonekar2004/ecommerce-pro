@@ -34,7 +34,7 @@ export default function FilterGroup({ title, queryKey, options }: Props) {
 
   return (
     <div>
-      <h3 className="mb-4 text-lg font-semibold">{title}</h3>
+      <h3 className="mb-4 text-lg font-semibold text-neutral-900">{title}</h3>
 
       <div className="space-y-3">
         {options.map((option) => (
@@ -43,12 +43,13 @@ export default function FilterGroup({ title, queryKey, options }: Props) {
             className="flex cursor-pointer items-center gap-3"
           >
             <input
+              className="h-4 w-4 rounded border-neutral-300 accent-black"
               type="checkbox"
-              checked={searchParams.get("queryKey") === option.slug}
+              checked={searchParams.get(queryKey) === option.slug}
               onChange={() => changeValue(option.slug)}
             />
 
-            <span>{option.name}</span>
+            <span className="text-sm text-neutral-700">{option.name}</span>
           </label>
         ))}
       </div>
