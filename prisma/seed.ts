@@ -2,8 +2,92 @@ import { PrismaClient, Gender, Size } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+async function createProduct(data: {
+  name: string;
+  slug: string;
+  description: string;
+  sku: string;
+  thumbnail: string;
+  price: number;
+  comparePrice?: number;
+  categoryId: string;
+  brandId: string;
+  collection: string;
+  featured?: boolean;
+  newArrival?: boolean;
+  images: string[];
+  colors: {
+    name: string;
+    hexCode: string;
+  }[];
+}) {
+  return prisma.product.create({
+    data: {
+      name: data.name,
+      slug: data.slug,
+      description: data.description,
+      sku: data.sku,
+
+      thumbnail: data.thumbnail,
+
+      price: data.price,
+      comparePrice: data.comparePrice,
+
+      gender: Gender.MEN,
+      collection: data.collection,
+
+      stock: 50,
+      rating: 4.8,
+      reviewCount: 150,
+
+      isFeatured: data.featured ?? false,
+      isNewArrival: data.newArrival ?? false,
+
+      brandId: data.brandId,
+      categoryId: data.categoryId,
+
+      images: {
+        create: data.images.map((url, index) => ({
+          url,
+          displayOrder: index,
+          isPrimary: index === 0,
+        })),
+      },
+
+      colors: {
+        create: data.colors.map((color, index) => ({
+          ...color,
+          displayOrder: index,
+        })),
+      },
+
+      sizes: {
+        create: [
+          {
+            size: Size.S,
+            quantity: 20,
+          },
+          {
+            size: Size.M,
+            quantity: 20,
+          },
+          {
+            size: Size.L,
+            quantity: 20,
+          },
+          {
+            size: Size.XL,
+            quantity: 20,
+          },
+        ],
+      },
+    },
+  });
+}
+
 async function main() {
-  // Delete old data
+  console.log("Cleaning database...");
+
   await prisma.productSize.deleteMany();
   await prisma.productColor.deleteMany();
   await prisma.productImage.deleteMany();
@@ -11,7 +95,8 @@ async function main() {
   await prisma.category.deleteMany();
   await prisma.brand.deleteMany();
 
-  // Brand
+  console.log("Creating brand...");
+
   const blackheadfashion = await prisma.brand.create({
     data: {
       name: "BlackHeadFashion",
@@ -20,7 +105,8 @@ async function main() {
     },
   });
 
-  // Category
+  console.log("Creating categories...");
+
   const tshirts = await prisma.category.create({
     data: {
       name: "T-Shirts",
@@ -29,89 +115,334 @@ async function main() {
     },
   });
 
-  // Product
-  const oversizedTee = await prisma.product.create({
+  const shirts = await prisma.category.create({
     data: {
-      name: "Essential Oversized Tee",
-      slug: "essential-oversized-tee-black",
-      description:
-        "Premium heavyweight oversized t-shirt crafted for everyday comfort.",
-      sku: "BHF-TS-0001",
-      price: 1999,
-      comparePrice: 2499,
-      gender: Gender.MEN,
-      collection: "Essentials",
-      stock: 50,
-      rating: 4.9,
-      reviewCount: 248,
-      isFeatured: true,
-      isNewArrival: true,
-      isTrending: true,
-      brandId: blackheadfashion.id,
-      categoryId: tshirts.id,
+      name: "Shirts",
+      slug: "shirts",
+      image: "/images/categories/shirts.jpg",
     },
   });
 
-  // Images
-  await prisma.productImage.createMany({
-    data: [
-      {
-        url: "/images/products/tshirts/tshirt-1.jpg",
-        alt: "Essential Oversized Tee Front",
-        isPrimary: true,
-        productId: oversizedTee.id,
-      },
-      {
-        url: "/images/products/tshirts/tshirt-1.jpg",
-        alt: "Essential Oversized Tee Back",
-        productId: oversizedTee.id,
-      },
-    ],
+  const jeans = await prisma.category.create({
+    data: {
+      name: "Jeans",
+      slug: "jeans",
+      image: "/images/categories/jeans.jpg",
+    },
   });
 
-  // Colors
-  await prisma.productColor.createMany({
-    data: [
+  console.log("Creating products...");
+
+  await createProduct({
+    name: "Essential Oversized Tee",
+    slug: "essential-oversized-tee-black",
+    description:
+      "Premium heavyweight oversized t-shirt crafted for everyday comfort.",
+
+    sku: "BHF-TS-001",
+
+    thumbnail: "/images/products/tshirts/tshirt-1.jpg",
+
+    price: 1999,
+    comparePrice: 2499,
+
+    categoryId: tshirts.id,
+    brandId: blackheadfashion.id,
+
+    collection: "Essentials",
+
+    featured: true,
+    newArrival: true,
+
+    images: ["/images/products/tshirts/tshirt-1.jpg"],
+
+    colors: [
       {
         name: "Black",
         hexCode: "#000000",
-        productId: oversizedTee.id,
       },
       {
         name: "White",
         hexCode: "#FFFFFF",
-        productId: oversizedTee.id,
       },
     ],
   });
 
-  // Sizes
-  await prisma.productSize.createMany({
-    data: [
+  await createProduct({
+    name: "Classic Heavy Tee",
+    slug: "classic-heavy-tee",
+    description:
+      "Premium heavyweight oversized t-shirt crafted for everyday comfort.",
+
+    sku: "BHF-TS-002",
+
+    thumbnail: "/images/products/tshirts/tshirt-2.jpg",
+
+    price: 2999,
+    comparePrice: 4999,
+
+    categoryId: tshirts.id,
+    brandId: blackheadfashion.id,
+
+    collection: "Essentials",
+
+    featured: true,
+    newArrival: false,
+
+    images: ["/images/products/tshirts/tshirt-2.jpg"],
+
+    colors: [
       {
-        size: Size.S,
-        quantity: 15,
-        productId: oversizedTee.id,
+        name: "Black",
+        hexCode: "#000000",
       },
       {
-        size: Size.M,
-        quantity: 20,
-        productId: oversizedTee.id,
-      },
-      {
-        size: Size.L,
-        quantity: 10,
-        productId: oversizedTee.id,
-      },
-      {
-        size: Size.XL,
-        quantity: 5,
-        productId: oversizedTee.id,
+        name: "White",
+        hexCode: "#FFFFFF",
       },
     ],
   });
 
-  console.log("Database seeded successfully");
+  await createProduct({
+    name: "Minimal Logo Tee",
+    slug: "minimal-logo-tee",
+    description:
+      "Premium heavyweight oversized t-shirt crafted for everyday comfort.",
+
+    sku: "BHF-TS-003",
+
+    thumbnail: "/images/products/tshirts/tshirt-3.jpg",
+
+    price: 3999,
+    comparePrice: 5999,
+
+    categoryId: tshirts.id,
+    brandId: blackheadfashion.id,
+
+    collection: "Essentials",
+
+    featured: false,
+    newArrival: true,
+
+    images: ["/images/products/tshirts/tshirt-3.jpg"],
+
+    colors: [
+      {
+        name: "Black",
+        hexCode: "#000000",
+      },
+      {
+        name: "White",
+        hexCode: "#FFFFFF",
+      },
+    ],
+  });
+
+  await createProduct({
+    name: "Oxford Shirt",
+    slug: "oxford-shirt",
+    description: "Premium shirt crafted for everyday Fashion.",
+
+    sku: "BHF-SH-001",
+
+    thumbnail: "/images/products/shirts/shirt-1.jpg",
+
+    price: 1999,
+    comparePrice: 3999,
+
+    categoryId: shirts.id,
+    brandId: blackheadfashion.id,
+
+    collection: "Essentials",
+
+    featured: true,
+    newArrival: true,
+
+    images: ["/images/products/shirts/shirt-1.jpg"],
+
+    colors: [
+      {
+        name: "Black",
+        hexCode: "#000000",
+      },
+      {
+        name: "White",
+        hexCode: "#FFFFFF",
+      },
+    ],
+  });
+
+  await createProduct({
+    name: "Casual Shirt",
+    slug: "casual-linen-shirt",
+    description: "Premium shirt crafted for everyday Fashion.",
+
+    sku: "BHF-SH-002",
+
+    thumbnail: "/images/products/shirts/shirt-2.jpg",
+
+    price: 2999,
+    comparePrice: 3999,
+
+    categoryId: shirts.id,
+    brandId: blackheadfashion.id,
+
+    collection: "Essentials",
+
+    featured: true,
+    newArrival: false,
+
+    images: ["/images/products/shirts/shirt-2.jpg"],
+
+    colors: [
+      {
+        name: "Black",
+        hexCode: "#000000",
+      },
+      {
+        name: "White",
+        hexCode: "#FFFFFF",
+      },
+    ],
+  });
+
+  await createProduct({
+    name: "Formal Shirt",
+    slug: "formal-shirt",
+    description: "Premium shirt crafted for everyday Fashion.",
+
+    sku: "BHF-SH-003",
+
+    thumbnail: "/images/products/shirts/shirt-3.jpg",
+
+    price: 3999,
+    comparePrice: 5999,
+
+    categoryId: shirts.id,
+    brandId: blackheadfashion.id,
+
+    collection: "Essentials",
+
+    featured: true,
+    newArrival: true,
+
+    images: ["/images/products/shirts/shirt-3.jpg"],
+
+    colors: [
+      {
+        name: "Black",
+        hexCode: "#000000",
+      },
+      {
+        name: "White",
+        hexCode: "#FFFFFF",
+      },
+    ],
+  });
+
+  await createProduct({
+    name: "Slim Fit Jeans",
+    slug: "slim-fit-jeans",
+    description: "Premium jeans crafted for everyday Fashion.",
+
+    sku: "BHF-JN-001",
+
+    thumbnail: "/images/products/jeans/jeans-1.jpg",
+
+    price: 1999,
+    comparePrice: 2999,
+
+    categoryId: jeans.id,
+    brandId: blackheadfashion.id,
+
+    collection: "Essentials",
+
+    featured: true,
+    newArrival: true,
+
+    images: ["/images/products/jeans/jeans-1.jpg"],
+
+    colors: [
+      {
+        name: "Blue",
+        hexCode: "#000000",
+      },
+      {
+        name: "White",
+        hexCode: "#FFFFFF",
+      },
+    ],
+  });
+
+  await createProduct({
+    name: "Relaxed Fit Jeans",
+    slug: "relaxed-fit-jeans",
+    description: "Premium jeans crafted for everyday Fashion.",
+
+    sku: "BHF-JN-002",
+
+    thumbnail: "/images/products/jeans/jeans-2.jpg",
+
+    price: 2999,
+    comparePrice: 3999,
+
+    categoryId: jeans.id,
+    brandId: blackheadfashion.id,
+
+    collection: "Essentials",
+
+    featured: true,
+    newArrival: false,
+
+    images: ["/images/products/jeans/jeans-2.jpg"],
+
+    colors: [
+      {
+        name: "Blue",
+        hexCode: "#000000",
+      },
+      {
+        name: "White",
+        hexCode: "#FFFFFF",
+      },
+    ],
+  });
+
+  await createProduct({
+    name: "Cargo Pants",
+    slug: "cargo-pants",
+    description: "Premium jeans crafted for everyday Fashion.",
+
+    sku: "BHF-JN-003",
+
+    thumbnail: "/images/products/jeans/jeans-3.jpg",
+
+    price: 3999,
+    comparePrice: 4999,
+
+    categoryId: jeans.id,
+    brandId: blackheadfashion.id,
+
+    collection: "Essentials",
+
+    featured: true,
+    newArrival: true,
+
+    images: ["/images/products/jeans/jeans-3.jpg"],
+
+    colors: [
+      {
+        name: "Blue",
+        hexCode: "#1D4ED8",
+      },
+      {
+        name: "White",
+        hexCode: "#FFFFFF",
+      },
+    ],
+  });
+
+  console.log("Seed completed.");
 }
 
 main()
@@ -120,6 +451,8 @@ main()
   })
   .catch(async (error) => {
     console.error(error);
+
     await prisma.$disconnect();
+
     process.exit(1);
   });
