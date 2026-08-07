@@ -18,12 +18,14 @@ export default async function ProductPage({ params }: Props) {
   }
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 py-10">
-      <div className="grid gap-16 lg:grid-cols-2">
+    <main className="mx-auto max-w-[1440px] px-6 py-12">
+      <div className="grid gap-16 lg:grid-cols-[1.2fr_0.8fr]">
         <ProductGallery product={product} />
         <ProductInfo product={product} />
       </div>
-      <SimilarProducts />
+      <section className="mt-24">
+        <SimilarProducts currentProduct={product} />
+      </section>
     </main>
   );
 }

@@ -1,21 +1,27 @@
-type Props = {
-  slug: string;
-};
+import { Product } from "@/types/product";
+import ProductHeader from "./ProductHeader";
+import ProductPrice from "../ProductPrice";
+import ProductDescription from "./ProductDescription";
 
-export default function ProductInfo({ slug }: Props) {
+interface Props {
+  product: Product;
+}
+
+export default function ProductInfo({ product }: Props) {
   return (
-    <div className="space-y-4">
-      <p className="text-sm-uppercase tracking-[0.25em] text-neutral-500">
-        BlackHead
-      </p>
+    <div className="flex flex-col">
+      <ProductHeader product={product} />
 
-      <h1 className="text-4xl font-bold">{slug}</h1>
+      <div className="mt-8">
+        <ProductPrice
+          price={product.price}
+          comparePrice={product.comparePrice}
+        />
+      </div>
 
-      <p className="text-3xl font-semibold">₹1,499</p>
-
-      <p className="text-neutral-600">
-        Premium oversized cotton t-shirt crafted for everyday comfort.
-      </p>
+      <div className="mt-10">
+        <ProductDescription product={product} />
+      </div>
     </div>
   );
 }

@@ -1,12 +1,15 @@
-export default function ProductDescription() {
-  return (
-    <section className="mt-24">
-      <h2 className="text-3xl font-bold">Description</h2>
+import { Product } from "@/types/product";
 
-      <p className="mt-6 max-w-3xl text-neutral-600">
-        Premium heavyweight fabric designed for comfort, durability and everyday
-        style.
-      </p>
-    </section>
+interface Props {
+  product: Product;
+}
+
+export default function ProductDescription({ product }: Props) {
+  return (
+    <div>
+      <h2 className="text-lg font-semibold">Description</h2>
+
+      <p className="mt-4 leading-8 text-neutral-600">{product.description}</p>
+    </div>
   );
 }
