@@ -9,27 +9,11 @@ type ProductInfoProps = {
 export default function ProductInfo({ product }: ProductInfoProps) {
   return (
     <div className="space-y-3 p-5">
-      <p
-        className="
-          text-xs
-          font-semibold
-          uppercase
-          tracking-[0.25em]
-          text-neutral-500
-        "
-      >
+      <p className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">
         {product.brand}
       </p>
 
-      <h3
-        className="
-          line-clamp-2
-          text-xl
-          font-semibold
-          leading-snug
-          text-neutral-900
-        "
-      >
+      <h3 className="line-clamp-2 text-xl font-semibold leading-snug text-neutral-900">
         {product.name}
       </h3>
 

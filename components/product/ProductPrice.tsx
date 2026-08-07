@@ -15,11 +15,11 @@ export default function ProductPrice({
 
   return (
     <div className="flex items-center gap-3">
-      <span className="text-lg font-semibold">
+      <span className="text-black font-semibold line-through">
         {formatCurrency(comparePrice)}
       </span>
 
-      <span className="text-gray-400 line-through">
+      <span className="text-gray-400 ">
         {formatCurrency(price)}
       </span>
     </div>
