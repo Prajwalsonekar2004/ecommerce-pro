@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getProductBySlug } from "@/services/product.service";
+import { ProductGallery, ProductInfo } from "@/components/product/details";
 
 interface Props {
   params: Promise<{
@@ -18,11 +19,11 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <main className="mx-auto max-w-[1440px] px-6 py-10">
-      <h1 className="text-4xl font-bold">{product.name}</h1>
-
-      <p className="mt-2 text-neutral-500">{product.brand}</p>
-
-      <p className="mt-6">{product.description}</p>
+      <div className="grid gap-16 lg:grid-cols-2">
+        <ProductGallery product={product} />
+        <ProductInfo product={product} />
+      </div>
+      <SimilarProducts />
     </main>
   );
 }
