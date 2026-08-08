@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getProductBySlug } from "@/services/product.service";
 import { ProductGallery, ProductInfo } from "@/components/product/details";
+import SimilarProducts from "@/components/product/details/SimilarProducts";
 
 interface Props {
   params: Promise<{
