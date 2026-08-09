@@ -25,6 +25,7 @@ export interface Product {
   isFeatured: boolean;
   isNewArrival: boolean;
   isTrending: boolean;
+  isOnSale: boolean;
 }
 
 export interface ProductFilters {
@@ -34,4 +35,5 @@ export interface ProductFilters {
   featured?: boolean;
   newArrival?: boolean;
   trending?: boolean;
+  sale?: boolean;
 }

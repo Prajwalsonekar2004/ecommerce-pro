@@ -15,6 +15,7 @@ async function createProduct(data: {
   collection: string;
   featured?: boolean;
   newArrival?: boolean;
+  isOnSale?: boolean;
   images: string[];
   colors: {
     name: string;
@@ -153,6 +154,7 @@ async function main() {
 
     featured: true,
     newArrival: true,
+    isOnSale: false,
 
     images: ["/images/products/tshirts/tshirt-1.jpg"],
 
@@ -188,6 +190,7 @@ async function main() {
 
     featured: true,
     newArrival: false,
+    isOnSale: false,
 
     images: ["/images/products/tshirts/tshirt-2.jpg"],
 
@@ -223,6 +226,7 @@ async function main() {
 
     featured: false,
     newArrival: true,
+    isOnSale: false,
 
     images: ["/images/products/tshirts/tshirt-3.jpg"],
 
@@ -257,6 +261,7 @@ async function main() {
 
     featured: true,
     newArrival: true,
+    isOnSale: false,
 
     images: ["/images/products/shirts/shirt-1.jpg"],
 
@@ -291,6 +296,7 @@ async function main() {
 
     featured: true,
     newArrival: false,
+    isOnSale: false,
 
     images: ["/images/products/shirts/shirt-2.jpg"],
 
@@ -325,6 +331,7 @@ async function main() {
 
     featured: true,
     newArrival: true,
+    isOnSale: false,
 
     images: ["/images/products/shirts/shirt-3.jpg"],
 
@@ -359,6 +366,7 @@ async function main() {
 
     featured: true,
     newArrival: true,
+    isOnSale: false,
 
     images: ["/images/products/jeans/jeans-1.jpg"],
 
@@ -393,6 +401,7 @@ async function main() {
 
     featured: true,
     newArrival: false,
+    isOnSale: false,
 
     images: ["/images/products/jeans/jeans-2.jpg"],
 
@@ -427,6 +436,7 @@ async function main() {
 
     featured: true,
     newArrival: true,
+    isOnSale: false,
 
     images: ["/images/products/jeans/jeans-3.jpg"],
 

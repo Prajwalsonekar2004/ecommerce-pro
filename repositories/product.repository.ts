@@ -20,22 +20,28 @@ const productInclude = {
   sizes: true,
 } as const;
 
-function getOrderBy(sort?: ProductFilters["sort"]) {
+function getOrderBy(sort?: string) {
   switch (sort) {
+    case "featured":
+      return {
+        isFeatured: "desc" as const,
+      };
+
     case "price-low":
-      return { price: "asc" as const };
+      return {
+        price: "asc" as const,
+      };
 
     case "price-high":
-      return { price: "desc" as const };
+      return {
+        price: "desc" as const,
+      };
 
-    case "oldest":
-      return { createdAt: "asc" as const };
-
-    case "name":
-      return { name: "asc" as const };
-
+    case "newest":
     default:
-      return { createdAt: "desc" as const };
+      return {
+        createdAt: "desc" as const,
+      };
   }
 }
 
@@ -117,20 +123,6 @@ export async function findProductsWithFilters(filters: ProductFilters) {
           slug: filters.brand,
         },
       }),
-
-      ...(filters.minPrice !== undefined ||
-        filters.maxPrice !== undefined ? {
-          price: {
-            ...(filters.minPrice !== undefined && {
-              gte: filters.minPrice,
-            }),
-
-            ...(filters.maxPrice !== undefined && {
-              lte: filters.maxPrice,
-            }),
-          },
-        }
-      :{}),
     },
 
     include: productInclude,

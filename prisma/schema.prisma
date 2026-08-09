@@ -67,6 +67,7 @@ model Product {
   isFeatured     Boolean        @default(false)
   isNewArrival   Boolean        @default(false)
   isTrending     Boolean        @default(false)
+  isOnSale       Boolean        @default(false)
   isActive       Boolean        @default(true)
   brandId        String
   categoryId     String

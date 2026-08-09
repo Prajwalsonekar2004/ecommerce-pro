@@ -1,7 +1,6 @@
 import ProductGrid from "@/components/product/ProductGrid";
 import ProductToolbar from "@/components/product/ProductToolbar";
 import FilterSidebar from "@/components/product/FilterSidebar";
-import Pagination from "@/components/product/Pagination";
 
 import { searchProducts } from "@/services/product.service";
 import { getBrands } from "@/services/brand.service";
@@ -14,12 +13,7 @@ interface ProductsPageProps {
     search?: string;
     category?: string;
     brand?: string;
-    minPrice?: string;
-    maxPrice?: string;
-    color?: string;
-    size?: string;
     sort?: ProductFilters["sort"];
-    page?: string;
   }>;
 }
 
@@ -32,13 +26,7 @@ export default async function ProductsPage({
     search: params.search,
     category: params.category,
     brand: params.brand,
-    color: params.color,
-    size: params.size,
-    minPrice: params.minPrice ? Number(params.minPrice) : undefined,
-    maxPrice: params.maxPrice ? Number(params.maxPrice) : undefined,
     sort: params.sort ?? "newest",
-    page: Number(params.page ?? 1),
-    limit: 12,
   };
 
   const [products, brands, categories] = await Promise.all([
@@ -49,27 +37,36 @@ export default async function ProductsPage({
 
   return (
     <main className="min-h-screen bg-white">
-      <section className="mx-auto max-w-[1440px] px-6 py-10 lg:px-10">
-        <ProductToolbar />
+      <section className="mx-auto max-w-[1440px] px-6 pb-16 pt-8 sm:px-8 lg:px-12">
+        <div className="flex items-center justify-between gap-6 border-b border-neutral-200 pb-5">
+          <div className="flex items-baseline gap-4">
+            <h1 className="text-3xl font-semibold tracking-tight text-neutral-900 sm:text-3xl">
+              Products
+            </h1>
+            <p className="text-sm text-neutral-500">({products.length})</p>
+          </div>
 
-        <div className="mt-10 grid gap-10 lg:grid-cols-[290px_1fr]">
+          <ProductToolbar />
+        </div>
+
+        <div className="mt-7 grid gap-8 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-8">
           <FilterSidebar brands={brands} categories={categories} />
 
-          <section>
+          <section className="min-w-0">
             {products.length === 0 ? (
-              <div className="flex h-[500px] items-center justify-center rounded-3xl border border-neutral-200 bg-white">
-                <h2 className="text-2xl font-semibold text-neutral-700">
-                  No Products Found
-                </h2>
+              <div className="flex min-h-[400px] items-center justify-center">
+                <div className="text-center">
+                  <h2 className="text-xl font-medium text-neutral-900">
+                    No products found
+                  </h2>
+
+                  <p className="mt-2 text-sm text-neutral-500">
+                    Try another selection.
+                  </p>
+                </div>
               </div>
             ) : (
-              <>
-                <ProductGrid products={products} />
-
-                <div className="mt-16">
-                  <Pagination />
-                </div>
-              </>
+              <ProductGrid products={products} />
             )}
           </section>
         </div>

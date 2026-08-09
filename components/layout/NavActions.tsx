@@ -1,54 +1,68 @@
 "use client";
 
+import Link from "next/link";
 import { Search, Heart, ShoppingBag, User } from "lucide-react";
+
 import { useCart } from "@/lib/cart/cart-context";
+import { useWishlist } from "@/lib/wishlist/wishlist-context";
 
 export default function NavActions() {
-  const { itemCount } = useCart();
+  const { itemCount: cartItemCount } = useCart();
+  const { itemCount: wishlistItemCount } = useWishlist();
 
   return (
     <div className="flex items-center gap-5">
-      <button
-        type="button"
-        aria-label="Search"
-        className="transition hover:opacity-60"
+      <Link
+        href="/products"
+        aria-label="Search products"
+        className="text-neutral-900 transition hover:text-neutral-500"
       >
         <Search size={22} strokeWidth={1.8} />
-      </button>
+      </Link>
 
-      <button
-        type="button"
-        aria-label="Wishlist"
-        className="transition hover:opacity-60"
+      <Link
+        href="/wishlist"
+        aria-label={
+          wishlistItemCount > 0
+            ? `Wishlist, ${wishlistItemCount} items`
+            : "Wishlist"
+        }
+        className="relative text-neutral-900 transition hover:text-neutral-500"
       >
         <Heart size={22} strokeWidth={1.8} />
-      </button>
 
-      <button
-        type="button"
-        aria-label="Shopping bag"
-        className="relative transition hover:opacity-60"
+        {wishlistItemCount > 0 && (
+          <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-black px-1 text-[9px] font-semibold text-white">
+            {wishlistItemCount}
+          </span>
+        )}
+      </Link>
+
+      <Link
+        href="/cart"
+        aria-label={
+          cartItemCount > 0
+            ? `Shopping bag, ${cartItemCount} items`
+            : "Shopping bag"
+        }
+        className="relative text-neutral-900 transition hover:text-neutral-500"
       >
         <ShoppingBag size={22} strokeWidth={1.8} />
 
-        {itemCount > 0 && (
-          <span
-            className="absolute -right-2 -top-2n flex h-5 min-w-5 items-center justify-center rounded-full bg-black px-1 text-[10px] font-semibold
-              text-white
-            "
-          >
-            {itemCount}
+        {cartItemCount > 0 && (
+          <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-black px-1 text-[9px] font-semibold text-white">
+            {cartItemCount}
           </span>
         )}
-      </button>
+      </Link>
 
-      <button
-        type="button"
+      <Link
+        href="/profile"
         aria-label="Account"
-        className="transition hover:opacity-60"
+        className="text-neutral-900 transition hover:text-neutral-500"
       >
         <User size={22} strokeWidth={1.8} />
-      </button>
+      </Link>
     </div>
   );
 }
