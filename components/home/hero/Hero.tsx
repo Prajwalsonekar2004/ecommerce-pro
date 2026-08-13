@@ -7,10 +7,14 @@ export default function Hero() {
     <section className="relative overflow-hidden bg-white">
       <HeroBackground />
 
-      <div className="mx-auto flex min-h-screen max-w-[1440px] flex-col-reverse items-center gap-12 px-6 py-10 lg:flex-row lg:px-12">
-        <HeroContent />
+      <div className="mx-auto flex min-h-[560px] max-w-[1440px] items-center gap-8 px-6 py-10 lg:min-h-[600px] lg:px-12">
+        <div className="w-full lg:w-[42%]">
+          <HeroContent />
+        </div>
 
-        <HeroCarousel />
+        <div className="w-full lg:w-[58%]">
+          <HeroCarousel />
+        </div>
       </div>
     </section>
   );
