@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { ChevronDown } from "lucide-react";
 
 interface Option {
   id: string;
@@ -33,26 +34,44 @@ export default function FilterGroup({ title, queryKey, options }: Props) {
   }
 
   return (
-    <div>
-      <h3 className="mb-4 text-lg font-semibold text-neutral-900">{title}</h3>
+    <details open className="border-b border-neutral-200 pb-5">
+      <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-neutral-900 [&::-webkit-details-marker]:hidden">
+        {title}
 
-      <div className="space-y-3">
-        {options.map((option) => (
-          <label
-            key={option.id}
-            className="flex cursor-pointer items-center gap-3"
-          >
-            <input
-              className="h-4 w-4 rounded border-neutral-300 accent-black"
-              type="checkbox"
-              checked={searchParams.get(queryKey) === option.slug}
-              onChange={() => changeValue(option.slug)}
-            />
+        <ChevronDown
+          size={17}
+          strokeWidth={1.7}
+          className="transition-transform"
+        />
+      </summary>
 
-            <span className="text-sm text-neutral-700">{option.name}</span>
-          </label>
-        ))}
+      <div className="mt-5 space-y-3">
+        {options.map((option) => {
+          const checked = searchParams.get(queryKey) === option.slug;
+
+          return (
+            <label
+              key={option.id}
+              className="flex cursor-pointer items-center gap-3 text-sm text-neutral-700"
+            >
+              <input
+                type="checkbox"
+                checked={checked}
+                onChange={() => changeValue(option.slug)}
+                className="h-4 w-4 cursor-pointer rounded border-neutral-300 accent-black"
+              />
+
+              <span
+                className={
+                  checked ? "font-medium text-black" : "text-neutral-600"
+                }
+              >
+                {option.name}
+              </span>
+            </label>
+          );
+        })}
       </div>
-    </div>
+    </details>
   );
 }

@@ -19,8 +19,4 @@ export const navigation = [
     label: "Women",
     href: "/categories/women",
   },
-  {
-    label: "Kids",
-    href: "/categories/kids",
-  },
 ];

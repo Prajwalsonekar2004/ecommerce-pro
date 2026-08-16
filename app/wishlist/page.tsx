@@ -13,7 +13,13 @@ export default function WishlistPage() {
   const { addToCart } = useCart();
 
   function handleAddToBag(product: (typeof items)[number]) {
-    addToCart(product, 1);
+    const size = product.sizes[0];
+
+    if (!size) {
+      return;
+    }
+
+    addToCart(product, size, 1);
   }
 
   if (!isHydrated) {

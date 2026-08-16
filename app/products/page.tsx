@@ -13,6 +13,7 @@ interface ProductsPageProps {
     search?: string;
     category?: string;
     brand?: string;
+    size?: string;
     sort?: ProductFilters["sort"];
   }>;
 }
@@ -26,6 +27,7 @@ export default async function ProductsPage({
     search: params.search,
     category: params.category,
     brand: params.brand,
+    size: params.size,
     sort: params.sort ?? "newest",
   };
 
@@ -40,10 +42,11 @@ export default async function ProductsPage({
       <section className="mx-auto max-w-[1440px] px-6 pb-16 pt-8 sm:px-8 lg:px-12">
         <div className="flex items-center justify-between gap-6 border-b border-neutral-200 pb-5">
           <div className="flex items-baseline gap-4">
-            <h1 className="text-3xl font-semibold tracking-tight text-neutral-900 sm:text-3xl">
+            <h1 className="text-3xl font-semibold tracking-tight text-neutral-900 sm:text-4xl">
               Products
             </h1>
-            <p className="text-sm text-neutral-500">({products.length})</p>
+
+            <p className="text-sm text-neutral-500">{products.length}</p>
           </div>
 
           <ProductToolbar />

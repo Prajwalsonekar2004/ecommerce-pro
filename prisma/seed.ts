@@ -6,7 +6,12 @@ async function createProduct(data: {
   name: string;
   slug: string;
   description: string;
+  // material: string;
+  // fit: string;
+  // pattern: string;
+  // careInstructions: string;
   sku: string;
+  gender: Gender;
   thumbnail: string;
   price: number;
   comparePrice?: number;
@@ -27,6 +32,10 @@ async function createProduct(data: {
       name: data.name,
       slug: data.slug,
       description: data.description,
+      // material: data.material,
+      // fit: data.fit,
+      // pattern: data.pattern,
+      // careInstructions: data.careInstructions,
       sku: data.sku,
 
       thumbnail: data.thumbnail,
@@ -34,7 +43,7 @@ async function createProduct(data: {
       price: data.price,
       comparePrice: data.comparePrice,
 
-      gender: Gender.MEN,
+      gender: data.gender,
       collection: data.collection,
 
       stock: 50,
@@ -112,7 +121,7 @@ async function main() {
     data: {
       name: "T-Shirts",
       slug: "t-shirts",
-      image: "/images/categories/tshirts.jpg",
+      image: "/images/products/tshirts/shirt-7.jpg",
     },
   });
 
@@ -141,8 +150,9 @@ async function main() {
       "Premium heavyweight oversized t-shirt crafted for everyday comfort.",
 
     sku: "BHF-TS-001",
+    gender: Gender.MEN,
 
-    thumbnail: "/images/products/tshirts/tshirt-1.jpg",
+    thumbnail: "/images/products/real_products_img/IMG_9441.PNG",
 
     price: 1999,
     comparePrice: 2499,
@@ -156,7 +166,7 @@ async function main() {
     newArrival: true,
     isOnSale: false,
 
-    images: ["/images/products/tshirts/tshirt-1.jpg"],
+    images: ["/images/products/real_products_img/IMG_9441.PNG"],
 
     colors: [
       {
@@ -177,8 +187,9 @@ async function main() {
       "Premium heavyweight oversized t-shirt crafted for everyday comfort.",
 
     sku: "BHF-TS-002",
+    gender: Gender.MEN,
 
-    thumbnail: "/images/products/tshirts/tshirt-2.jpg",
+    thumbnail: "/images/products/real_products_img/IMG_9442.PNG",
 
     price: 2999,
     comparePrice: 4999,
@@ -192,7 +203,7 @@ async function main() {
     newArrival: false,
     isOnSale: false,
 
-    images: ["/images/products/tshirts/tshirt-2.jpg"],
+    images: ["/images/products/real_products_img/IMG_9442.PNG"],
 
     colors: [
       {
@@ -213,8 +224,9 @@ async function main() {
       "Premium heavyweight oversized t-shirt crafted for everyday comfort.",
 
     sku: "BHF-TS-003",
+    gender: Gender.MEN,
 
-    thumbnail: "/images/products/tshirts/tshirt-3.jpg",
+    thumbnail: "/images/products/real_products_img/IMG_9443.PNG",
 
     price: 3999,
     comparePrice: 5999,
@@ -228,7 +240,7 @@ async function main() {
     newArrival: true,
     isOnSale: false,
 
-    images: ["/images/products/tshirts/tshirt-3.jpg"],
+    images: ["/images/products/real_products_img/IMG_9443.PNG"],
 
     colors: [
       {
@@ -248,8 +260,9 @@ async function main() {
     description: "Premium shirt crafted for everyday Fashion.",
 
     sku: "BHF-SH-001",
+    gender: Gender.MEN,
 
-    thumbnail: "/images/products/shirts/shirt-1.jpg",
+    thumbnail: "/images/products/real_products_img/IMG_9444.PNG",
 
     price: 1999,
     comparePrice: 3999,
@@ -263,7 +276,7 @@ async function main() {
     newArrival: true,
     isOnSale: false,
 
-    images: ["/images/products/shirts/shirt-1.jpg"],
+    images: ["/images/products/real_products_img/IMG_9444.PNG"],
 
     colors: [
       {
@@ -283,8 +296,9 @@ async function main() {
     description: "Premium shirt crafted for everyday Fashion.",
 
     sku: "BHF-SH-002",
+    gender: Gender.MEN,
 
-    thumbnail: "/images/products/shirts/shirt-2.jpg",
+    thumbnail: "/images/products/real_products_img/IMG_9445.PNG",
 
     price: 2999,
     comparePrice: 3999,
@@ -298,7 +312,7 @@ async function main() {
     newArrival: false,
     isOnSale: false,
 
-    images: ["/images/products/shirts/shirt-2.jpg"],
+    images: ["/images/products/real_products_img/IMG_9445.PNG"],
 
     colors: [
       {
@@ -318,8 +332,9 @@ async function main() {
     description: "Premium shirt crafted for everyday Fashion.",
 
     sku: "BHF-SH-003",
+    gender: Gender.MEN,
 
-    thumbnail: "/images/products/shirts/shirt-3.jpg",
+    thumbnail: "/images/products/real_products_img/IMG_9446.PNG",
 
     price: 3999,
     comparePrice: 5999,
@@ -333,7 +348,7 @@ async function main() {
     newArrival: true,
     isOnSale: false,
 
-    images: ["/images/products/shirts/shirt-3.jpg"],
+    images: ["/images/products/real_products_img/IMG_9446.PNG"],
 
     colors: [
       {
@@ -353,8 +368,9 @@ async function main() {
     description: "Premium jeans crafted for everyday Fashion.",
 
     sku: "BHF-JN-001",
+    gender: Gender.MEN,
 
-    thumbnail: "/images/products/jeans/jeans-1.jpg",
+    thumbnail: "/images/products/real_products_img/IMG_9447.PNG",
 
     price: 1999,
     comparePrice: 2999,
@@ -368,7 +384,7 @@ async function main() {
     newArrival: true,
     isOnSale: false,
 
-    images: ["/images/products/jeans/jeans-1.jpg"],
+    images: ["/images/products/real_products_img/IMG_9447.PNG"],
 
     colors: [
       {
@@ -388,8 +404,9 @@ async function main() {
     description: "Premium jeans crafted for everyday Fashion.",
 
     sku: "BHF-JN-002",
+    gender: Gender.MEN,
 
-    thumbnail: "/images/products/jeans/jeans-2.jpg",
+    thumbnail: "/images/products/real_products_img/IMG_9448.PNG",
 
     price: 2999,
     comparePrice: 3999,
@@ -403,7 +420,7 @@ async function main() {
     newArrival: false,
     isOnSale: false,
 
-    images: ["/images/products/jeans/jeans-2.jpg"],
+    images: ["/images/products/real_products_img/IMG_9448.PNG"],
 
     colors: [
       {
@@ -418,13 +435,14 @@ async function main() {
   });
 
   await createProduct({
-    name: "Cargo Pants",
-    slug: "cargo-pants",
+    name: "Denim Pants",
+    slug: "denim-pants",
     description: "Premium jeans crafted for everyday Fashion.",
 
     sku: "BHF-JN-003",
+    gender: Gender.MEN,
 
-    thumbnail: "/images/products/jeans/jeans-3.jpg",
+    thumbnail: "/images/products/real_products_img/IMG_9449.PNG",
 
     price: 3999,
     comparePrice: 4999,
@@ -438,7 +456,43 @@ async function main() {
     newArrival: true,
     isOnSale: false,
 
-    images: ["/images/products/jeans/jeans-3.jpg"],
+    images: ["/images/products/real_products_img/IMG_9449.PNG"],
+
+    colors: [
+      {
+        name: "Blue",
+        hexCode: "#1D4ED8",
+      },
+      {
+        name: "White",
+        hexCode: "#FFFFFF",
+      },
+    ],
+  });
+
+  await createProduct({
+    name: "Black Pants",
+    slug: "black-pants",
+    description: "Premium jeans crafted for everyday Fashion.",
+
+    sku: "BHF-JN-004",
+    gender: Gender.MEN,
+
+    thumbnail: "/images/products/real_products_img/IMG_9450.PNG",
+
+    price: 3999,
+    comparePrice: 4999,
+
+    categoryId: jeans.id,
+    brandId: blackheadfashion.id,
+
+    collection: "Essentials",
+
+    featured: true,
+    newArrival: true,
+    isOnSale: false,
+
+    images: ["/images/products/real_products_img/IMG_9450.PNG"],
 
     colors: [
       {

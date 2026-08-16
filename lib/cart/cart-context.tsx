@@ -11,19 +11,28 @@ import {
 
 import { Product } from "@/types/product";
 
-interface CartItem {
+type CartItem = {
   product: Product;
+  size: Product["sizes"][number];
   quantity: number;
-}
+};
 
 interface CartContextType {
   items: CartItem[];
   itemCount: number;
   subtotal: number;
   isHydrated: boolean;
-  addToCart: (product: Product, quantity?: number) => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  addToCart: (
+    product: Product,
+    size: Product["sizes"][number],
+    quantity?: number,
+  ) => void;
+  removeFromCart: (productId: string, size: Product["sizes"][number]) => void;
+  updateQuantity: (
+    productId: string,
+    size: Product["sizes"][number],
+    quantity: number,
+  ) => void;
   clearCart: () => void;
 }
 
@@ -103,6 +112,13 @@ function isValidCartItem(item: unknown): item is CartItem {
   const cartItem = item as Record<string, unknown>;
 
   if (!isValidProduct(cartItem.product)) {
+    return false;
+  }
+
+  if (
+    typeof cartItem.size !== "string" ||
+    !cartItem.product.sizes.includes(cartItem.size)
+  ) {
     return false;
   }
 
@@ -190,72 +206,85 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [items, isHydrated]);
 
-  const addToCart = useCallback((product: Product, quantity = 1) => {
-    if (!isValidProduct(product)) {
-      console.error("Cannot add invalid product to cart.", product);
-      return;
-    }
-
-    const normalizedQuantity = normalizeQuantity(quantity);
-
-    if (normalizedQuantity === null) {
-      return;
-    }
-
-    if (product.stock <= 0) {
-      return;
-    }
-
-    setItems((currentItems) => {
-      const existingItem = currentItems.find(
-        (item) => item.product.id === product.id,
-      );
-
-      if (existingItem) {
-        const nextQuantity = Math.min(
-          existingItem.quantity + normalizedQuantity,
-          product.stock,
-        );
-
-        return currentItems.map((item) =>
-          item.product.id === product.id
-            ? {
-                ...item,
-                product,
-                quantity: nextQuantity,
-              }
-            : item,
-        );
+  const addToCart = useCallback(
+    (product: Product, size: Product["sizes"][number], quantity = 1) => {
+      if (!product.sizes.includes(size)) {
+        console.error("Cannot add unavailable size to cart.", {
+          product: product.id,
+          size,
+        });
+        return;
       }
 
-      return [
-        ...currentItems,
-        {
-          product,
-          quantity: Math.min(normalizedQuantity, product.stock),
-        },
-      ];
-    });
-  }, []);
-
-  const removeFromCart = useCallback((productId: string) => {
-    setItems((currentItems) =>
-      currentItems.filter((item) => item.product.id !== productId),
-    );
-  }, []);
-
-  const updateQuantity = useCallback(
-    (productId: string, quantity: number) => {
       const normalizedQuantity = normalizeQuantity(quantity);
 
       if (normalizedQuantity === null) {
-        removeFromCart(productId);
+        return;
+      }
+
+      if (product.stock <= 0) {
+        return;
+      }
+
+      setItems((currentItems) => {
+        const existingItem = currentItems.find(
+          (item) => item.product.id === product.id && item.size === size,
+        );
+
+        if (existingItem) {
+          const nextQuantity = Math.min(
+            existingItem.quantity + normalizedQuantity,
+            product.stock,
+          );
+
+          return currentItems.map((item) =>
+            item.product.id === product.id && item.size === size
+              ? {
+                  ...item,
+                  product,
+                  size,
+                  quantity: nextQuantity,
+                }
+              : item,
+          );
+        }
+
+        return [
+          ...currentItems,
+          {
+            product,
+            size,
+            quantity: Math.min(normalizedQuantity, product.stock),
+          },
+        ];
+      });
+    },
+    [],
+  );
+
+  const removeFromCart = useCallback(
+    (productId: string, size: Product["sizes"][number]) => {
+      setItems((currentItems) =>
+        currentItems.filter(
+          (item) => !(item.product.id === productId && item.size === size),
+        ),
+      );
+    },
+    [],
+  );
+
+  const updateQuantity = useCallback(
+    (productId: string, size: Product["sizes"][number], quantity: number) => {
+      const normalizedQuantity = normalizeQuantity(quantity);
+
+      if (normalizedQuantity === null) {
+        removeFromCart(productId, size);
         return;
       }
 
       setItems((currentItems) =>
         currentItems.map((item) => {
-          if (item.product.id !== productId) {
+          if (item.product.id !== productId || item.size !== size) {
             return item;
           }
 

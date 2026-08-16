@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { ShoppingBag, Minus, Plus, Trash2 } from "lucide-react";
 
 import { useCart } from "@/lib/cart/cart-context";
 import { formatCurrency } from "@/lib/format";
@@ -14,6 +14,13 @@ export default function CartPage() {
     return (
       <main className="mx-auto flex min-h-[70vh] max-w-[1440px] items-center justify-center px-6 py-20">
         <div className="text-center">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-neutral-200">
+            <ShoppingBag
+              size={26}
+              strokeWidth={1.5}
+              className="text-neutral-700"
+            />
+          </div>
           <h1 className="text-3xl font-semibold tracking-tight">
             Your bag is empty
           </h1>
@@ -55,7 +62,7 @@ export default function CartPage() {
 
             return (
               <div
-                key={product.id}
+                key={`${product.id}-${item.size}`}
                 className="flex gap-5 border-b border-neutral-200 pb-8"
               >
                 <Link
@@ -87,6 +94,10 @@ export default function CartPage() {
                       <p className="mt-1 text-sm text-neutral-500">
                         {product.category}
                       </p>
+
+                      <p className="mt-1 text-sm text-neutral-500">
+                        Size: {item.size}
+                      </p>
                     </div>
 
                     <p className="font-semibold">
@@ -99,7 +110,11 @@ export default function CartPage() {
                       <button
                         type="button"
                         onClick={() =>
-                          updateQuantity(product.id, item.quantity - 1)
+                          updateQuantity(
+                            product.id,
+                            item.size,
+                            item.quantity - 1,
+                          )
                         }
                         className="p-3 transition hover:bg-neutral-100"
                         aria-label="Decrease quantity"
@@ -114,7 +129,11 @@ export default function CartPage() {
                       <button
                         type="button"
                         onClick={() =>
-                          updateQuantity(product.id, item.quantity + 1)
+                          updateQuantity(
+                            product.id,
+                            item.size,
+                            item.quantity + 1,
+                          )
                         }
                         className="p-3 transition hover:bg-neutral-100"
                         aria-label="Increase quantity"
@@ -125,7 +144,7 @@ export default function CartPage() {
 
                     <button
                       type="button"
-                      onClick={() => removeFromCart(product.id)}
+                      onClick={() => removeFromCart(product.id, item.size)}
                       className="flex items-center gap-2 text-sm text-neutral-500 transition hover:text-black"
                     >
                       <Trash2 size={17} />

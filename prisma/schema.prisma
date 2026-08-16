@@ -53,6 +53,10 @@ model Product {
   name           String
   slug           String         @unique
   description    String
+  material       String?
+  fit            String?
+  pattern        String?
+  careInstructions String?
   sku            String         @unique
   thumbnail      String?
   price          Decimal        @db.Decimal(10, 2)
@@ -79,6 +83,13 @@ model Product {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([gender])
+  @@index([categoryId])
+  @@index([brandId])
+  @@index([isActive])
+  @@index([isNewArrival])
+  @@index([createdAt])
 }
 
 model ProductImage {

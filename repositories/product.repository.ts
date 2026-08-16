@@ -1,3 +1,4 @@
+import { Gender, Size } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { ProductFilters } from "@/types/product-filter";
 
@@ -20,7 +21,7 @@ const productInclude = {
   sizes: true,
 } as const;
 
-function getOrderBy(sort?: string) {
+function getOrderBy(sort?: ProductFilters["sort"]) {
   switch (sort) {
     case "featured":
       return {
@@ -95,6 +96,10 @@ export async function findProductsWithFilters(filters: ProductFilters) {
     where: {
       isActive: true,
 
+      ...(filters.gender && {
+        gender: filters.gender as Gender,
+      }),
+
       ...(filters.search && {
         OR: [
           {
@@ -121,6 +126,17 @@ export async function findProductsWithFilters(filters: ProductFilters) {
       ...(filters.brand && {
         brand: {
           slug: filters.brand,
+        },
+      }),
+
+      ...(filters.size && {
+        sizes: {
+          some: {
+            size: filters.size as Size,
+            quantity: {
+              gt: 0,
+            },
+          },
         },
       }),
     },

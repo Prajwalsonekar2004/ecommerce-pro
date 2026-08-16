@@ -4,12 +4,14 @@ export interface ProductFilters {
   category?: string;
   color?: string;
   size?: string;
-  minPrice?: number;
-  maxPrice?: number;
+  gender?: "MEN" | "WOMEN";
+
   featured?: boolean;
   newArrival?: boolean;
   trending?: boolean;
+
+  sort?: "featured" | "newest" | "price-low" | "price-high";
+
   page?: number;
   limit?: number;
-  sort?: "newest" | "oldest" | "price-low" | "price-high" | "name";
 }
