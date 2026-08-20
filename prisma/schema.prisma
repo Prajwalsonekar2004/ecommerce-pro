@@ -130,6 +130,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   addresses     Address[]
+  orders        Order[]
 
   @@unique([email])
   @@map("user")
@@ -204,4 +205,93 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model Order {
+  id String @id @default(cuid())
+
+  orderNumber String @unique
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  status OrderStatus @default(PENDING)
+
+  subtotal       Decimal @db.Decimal(10, 2)
+  shippingAmount Decimal @db.Decimal(10, 2)
+  totalAmount    Decimal @db.Decimal(10, 2)
+
+  currency String @default("INR")
+
+  paymentStatus PaymentStatus  @default(PENDING)
+  paymentMethod PaymentMethod?
+
+  razorpayOrderId   String? @unique
+  razorpayPaymentId String? @unique
+  razorpaySignature String?
+
+  shippingFullName    String
+  shippingPhone       String
+  shippingPincode     String
+  shippingHouseNo     String
+  shippingAddressLine String
+  shippingCity        String
+  shippingState       String
+  shippingCountry     String @default("India")
+
+  items OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([paymentStatus])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id String @id @default(cuid())
+
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId String
+
+  productName  String
+  productSlug  String
+  productImage String?
+
+  size  String
+  color String?
+
+  quantity Int
+
+  unitPrice  Decimal @db.Decimal(10, 2)
+  totalPrice Decimal @db.Decimal(10, 2)
+
+  createdAt DateTime @default(now())
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  RAZORPAY
 }
