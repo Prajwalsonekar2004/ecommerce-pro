@@ -2,19 +2,33 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import { ShoppingBag } from "lucide-react";
+import { useState } from "react";
 
 import { useCart } from "@/lib/cart/cart-context";
 import { formatCurrency } from "@/lib/format";
+
 import EmailLoginModal from "@/components/auth/EmailLoginModal";
+import OTPVerificationModal from "@/components/auth/OTPVerificationModal";
+import AddressSection from "@/components/checkout/AddressSection";
 
 export default function CheckoutPage() {
   const { items, subtotal } = useCart();
+
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isOTPOpen, setIsOTPOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [checkoutEmail, setCheckoutEmail] = useState("");
 
   function handleEmailContinue(email: string) {
-    console.log("checkout email:", email);
+    setCheckoutEmail(email);
+    setIsLoginOpen(false);
+    setIsOTPOpen(true);
+  }
+
+  function handleOTPVerified() {
+    setIsOTPOpen(false);
+    setIsAuthenticated(true);
   }
 
   if (items.length === 0) {
@@ -49,36 +63,54 @@ export default function CheckoutPage() {
   }
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 py-12 lg:px-12">
-      {/* Header */}
-      <div className="mb-12">
+    <main className="mx-auto max-w-[1440px] px-6 py-10 lg:px-12 lg:py-14">
+      <div className="mb-10">
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
           Checkout
         </h1>
 
-        <p className="mt-2 text-neutral-500">
-          Review your order before continuing.
+        <p className="mt-2 text-sm text-neutral-500">
+          {isAuthenticated
+            ? "Choose where you want your order delivered."
+            : "Complete your details to continue."}
         </p>
       </div>
 
-      {/* Main Checkout */}
       <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_420px]">
-        {/* Contact */}
-        <section className="max-w-2xl">
-          <h2 className="text-xl font-semibold tracking-tight">Contact</h2>
+        <section className="min-w-0">
+          {!isAuthenticated ? (
+            <div className="max-w-2xl">
+              <div className="rounded-2xl border border-neutral-200 p-6 sm:p-8">
+                <h2 className="text-xl font-semibold tracking-tight">
+                  Contact
+                </h2>
 
-          <p className="mt-2 text-sm text-neutral-500">
-            We’ll use your contact details for order updates.
-          </p>
+                <p className="mt-2 max-w-lg text-sm leading-6 text-neutral-500">
+                  Sign in with your email to continue. We’ll use your details
+                  for order updates and faster checkout.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() => setIsLoginOpen(true)}
+                  className="mt-8 flex h-14 w-full max-w-sm items-center justify-center rounded-full bg-black px-6 text-sm font-semibold text-white transition hover:bg-neutral-800"
+                >
+                  Continue with Email
+                </button>
+              </div>
+            </div>
+          ) : (
+            <AddressSection />
+          )}
         </section>
 
-        {/* Order Summary */}
         <aside className="h-fit rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-7 lg:sticky lg:top-24">
           <h2 className="text-xl font-semibold">Order Summary</h2>
 
           <div className="mt-6 space-y-6">
             {items.map((item) => {
               const product = item.product;
+
               const image =
                 product.images?.[0] ?? "/images/products/placeholder.jpg";
 
@@ -122,7 +154,6 @@ export default function CheckoutPage() {
             })}
           </div>
 
-          {/* Price Details */}
           <div className="mt-7 border-t border-neutral-200 pt-6">
             <div className="flex justify-between text-sm">
               <span className="text-neutral-500">Subtotal</span>
@@ -147,22 +178,32 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          {/* Primary CTA */}
-          <button
-            type="button"
-            onClick={() => setIsLoginOpen(true)}
-            className="mt-7 flex h-14 w-full items-center justify-center rounded-full bg-black px-6 text-sm font-semibold text-white transition hover:bg-neutral-800"
-          >
-            Continue to Checkout
-          </button>
+          {isAuthenticated && (
+            <button
+              type="button"
+              className="mt-7 flex h-14 w-full items-center justify-center rounded-full bg-black px-6 text-sm font-semibold text-white transition hover:bg-neutral-800"
+            >
+              Continue to Payment
+            </button>
+          )}
         </aside>
       </div>
 
-      {/* Email Login */}
       <EmailLoginModal
         open={isLoginOpen}
         onClose={() => setIsLoginOpen(false)}
         onContinue={handleEmailContinue}
+      />
+
+      <OTPVerificationModal
+        open={isOTPOpen}
+        email={checkoutEmail}
+        onClose={() => setIsOTPOpen(false)}
+        onBack={() => {
+          setIsOTPOpen(false);
+          setIsLoginOpen(true);
+        }}
+        onVerified={handleOTPVerified}
       />
     </main>
   );

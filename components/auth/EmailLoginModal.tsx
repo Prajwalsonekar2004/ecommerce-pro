@@ -1,5 +1,6 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import { X } from "lucide-react";
 import { useState } from "react";
 
@@ -15,6 +16,8 @@ export default function EmailLoginModal({
   onContinue,
 }: EmailLoginModalProps) {
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   if (!open) {
     return null;
@@ -22,14 +25,43 @@ export default function EmailLoginModal({
 
   const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  function handelSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!isValidEmail) {
+    if (!isValidEmail || isLoading) {
       return;
     }
 
-    onContinue(email);
+    const normalizedEmail = email.trim();
+
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const result = await authClient.emailOtp.sendVerificationOtp({
+        email: normalizedEmail,
+        type: "sign-in",
+      });
+
+      console.log("OTP send result:", result);
+
+      if (result.error) {
+        setError(
+          result.error.message || "Unable to send OTP. Please try again.",
+        );
+        return;
+      }
+
+      console.log("OTP sent successfully. Opening verification.");
+
+      onContinue(normalizedEmail);
+    } catch (error) {
+      console.error("Failed to send OTP:", error);
+
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -58,27 +90,33 @@ export default function EmailLoginModal({
           </p>
         </div>
 
-        <form onSubmit={handelSubmit} className="mt-7">
+        <form onSubmit={handleSubmit} className="mt-7">
           <label htmlFor="checkout-email" className="sr-only">
             Email address
           </label>
+
           <input
             id="checkout-email"
             type="email"
             value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            onChange={(event) => {
+              setEmail(event.target.value);
+              setError("");
+            }}
             placeholder="Enter your email address"
             autoComplete="email"
-            className="h-14 w-full rounded-xl border border-neutral-400 px-4 text-sm outline-none transition focus:border-black"
+            disabled={isLoading}
+            className="h-14 w-full rounded-xl border border-neutral-400 px-4 text-sm outline-none transition focus:border-black disabled:cursor-not-allowed disabled:bg-neutral-100"
           />
+
+          {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
 
           <button
             type="submit"
-            disabled={!isValidEmail}
-            className="mt-7 h-12 w-full rounded-full bg-black text-sm font-semibold text-white transition hover:bg-neutral-800 
-                    disabled:cursor-not-allowed disabled:bg-neutral-200 disabled:text-neutral-500"
+            disabled={!isValidEmail || isLoading}
+            className="mt-7 h-12 w-full rounded-full bg-black text-sm font-semibold text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:bg-neutral-200 disabled:text-neutral-500"
           >
-            Get OTP
+            {isLoading ? "Sending OTP..." : "Get OTP"}
           </button>
         </form>
 
