@@ -1,15 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Check,
-  ChevronRight,
-  Edit3,
-  MapPin,
-  Plus,
-  Trash2,
-  X,
-} from "lucide-react";
+import { Check, Edit3, Plus, Trash2, X } from "lucide-react";
 
 interface Address {
   id: string;
@@ -34,6 +26,10 @@ interface AddressForm {
   isDefault: boolean;
 }
 
+interface AddressSectionProps {
+  onAddressChange?: (address: Address | null) => void;
+}
+
 const emptyForm: AddressForm = {
   fullName: "",
   phone: "",
@@ -45,7 +41,9 @@ const emptyForm: AddressForm = {
   isDefault: true,
 };
 
-export default function AddressSection() {
+export default function AddressSection({
+  onAddressChange,
+}: AddressSectionProps) {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [selectedId, setSelectedId] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -55,7 +53,7 @@ export default function AddressSection() {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
 
-  async function loadAddresses() {
+  async function loadAddresses(preferredId?: string) {
     try {
       setIsLoading(true);
       setError("");
@@ -70,19 +68,27 @@ export default function AddressSection() {
       }
 
       const data = await response.json();
-
       const loadedAddresses: Address[] = data.addresses ?? [];
 
       setAddresses(loadedAddresses);
 
+      const preferredAddress = preferredId
+        ? loadedAddresses.find((address) => address.id === preferredId)
+        : undefined;
+
       const defaultAddress =
+        preferredAddress ??
         loadedAddresses.find((address) => address.isDefault) ??
         loadedAddresses[0];
 
-      setSelectedId(defaultAddress?.id ?? "");
+      const nextSelectedId = defaultAddress?.id ?? "";
+
+      setSelectedId(nextSelectedId);
+      onAddressChange?.(defaultAddress ?? null);
     } catch (error) {
       console.error("Failed to load addresses:", error);
       setError("Unable to load your saved addresses.");
+      onAddressChange?.(null);
     } finally {
       setIsLoading(false);
     }
@@ -94,10 +100,12 @@ export default function AddressSection() {
 
   function openAddDrawer() {
     setEditingId(null);
+
     setForm({
       ...emptyForm,
       isDefault: addresses.length === 0,
     });
+
     setError("");
     setIsDrawerOpen(true);
   }
@@ -196,10 +204,12 @@ export default function AddressSection() {
         throw new Error(data.error || "Unable to save address.");
       }
 
+      const savedAddress: Address = data.address;
+
       setIsDrawerOpen(false);
       setEditingId(null);
 
-      await loadAddresses();
+      await loadAddresses(savedAddress.id);
     } catch (error) {
       console.error("Failed to save address:", error);
 
@@ -219,6 +229,8 @@ export default function AddressSection() {
     }
 
     try {
+      setError("");
+
       const response = await fetch("/api/addresses", {
         method: "DELETE",
         headers: {
@@ -245,43 +257,12 @@ export default function AddressSection() {
     }
   }
 
-  async function handleSelect(addressId: string) {
+  function handleSelect(addressId: string) {
     setSelectedId(addressId);
 
     const address = addresses.find((item) => item.id === addressId);
 
-    if (!address || address.isDefault) {
-      return;
-    }
-
-    try {
-      const response = await fetch("/api/addresses", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          addressId,
-          fullName: address.fullName,
-          phone: address.phone,
-          pincode: address.pincode,
-          houseNo: address.houseNo,
-          addressLine: address.addressLine,
-          city: address.city,
-          state: address.state,
-          isDefault: true,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Unable to select address.");
-      }
-
-      await loadAddresses();
-    } catch (error) {
-      console.error("Failed to select address:", error);
-      setError("Unable to select this address.");
-    }
+    onAddressChange?.(address ?? null);
   }
 
   if (isLoading) {
@@ -300,16 +281,14 @@ export default function AddressSection() {
   return (
     <>
       <section>
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-semibold tracking-tight">
-              Choose Address
-            </h2>
+        <div>
+          <h2 className="text-2xl font-semibold tracking-tight">
+            Choose Address
+          </h2>
 
-            <p className="mt-2 text-sm text-neutral-500">
-              Select where you want your order delivered.
-            </p>
-          </div>
+          <p className="mt-2 text-sm text-neutral-500">
+            Select where you want your order delivered.
+          </p>
         </div>
 
         {error && !isDrawerOpen && (
@@ -318,102 +297,126 @@ export default function AddressSection() {
           </div>
         )}
 
-        <div className="mt-8 space-y-4">
-          {addresses.map((address) => {
-            const isSelected = selectedId === address.id;
+        {addresses.length === 0 ? (
+          <div className="mt-8 rounded-2xl border border-neutral-200 p-6 sm:p-8">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-neutral-100">
+              <Plus size={21} />
+            </div>
 
-            return (
-              <div
-                key={address.id}
-                className={`relative rounded-2xl border p-5 transition ${
-                  isSelected
-                    ? "border-black"
-                    : "border-neutral-200 hover:border-neutral-400"
-                }`}
-              >
-                <button
-                  type="button"
-                  onClick={() => handleSelect(address.id)}
-                  className="w-full text-left"
+            <h3 className="mt-5 text-lg font-semibold">
+              Add your delivery address
+            </h3>
+
+            <p className="mt-2 max-w-md text-sm leading-6 text-neutral-500">
+              Add an address to continue with your order.
+            </p>
+
+            <button
+              type="button"
+              onClick={openAddDrawer}
+              className="mt-6 h-12 rounded-full bg-black px-7 text-sm font-semibold text-white transition hover:bg-neutral-800"
+            >
+              Add Address
+            </button>
+          </div>
+        ) : (
+          <div className="mt-8 space-y-4">
+            {addresses.map((address) => {
+              const isSelected = selectedId === address.id;
+
+              return (
+                <div
+                  key={address.id}
+                  className={`relative rounded-2xl border p-5 transition sm:p-6 ${
+                    isSelected
+                      ? "border-black"
+                      : "border-neutral-200 hover:border-neutral-400"
+                  }`}
                 >
-                  <div className="flex gap-4">
-                    <div
-                      className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${
-                        isSelected
-                          ? "border-black bg-black text-white"
-                          : "border-neutral-400"
-                      }`}
-                    >
-                      {isSelected && <Check size={13} strokeWidth={3} />}
-                    </div>
-
-                    <div className="min-w-0 flex-1 pr-20">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <h3 className="font-semibold">{address.fullName}</h3>
-
-                        {address.isDefault && (
-                          <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-neutral-600">
-                            Default
-                          </span>
-                        )}
+                  <button
+                    type="button"
+                    onClick={() => handleSelect(address.id)}
+                    className="w-full text-left"
+                  >
+                    <div className="flex gap-4">
+                      <div
+                        className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${
+                          isSelected
+                            ? "border-black bg-black text-white"
+                            : "border-neutral-400"
+                        }`}
+                      >
+                        {isSelected && <Check size={13} strokeWidth={3} />}
                       </div>
 
-                      <p className="mt-2 text-sm leading-6 text-neutral-600">
-                        {address.houseNo}, {address.addressLine}
-                        <br />
-                        {address.city}, {address.state} {address.pincode}
-                      </p>
+                      <div className="min-w-0 flex-1 pr-20">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h3 className="font-semibold">{address.fullName}</h3>
 
-                      <p className="mt-2 text-sm text-neutral-600">
-                        +91 {address.phone}
-                      </p>
+                          {address.isDefault && (
+                            <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-neutral-600">
+                              Default
+                            </span>
+                          )}
+                        </div>
+
+                        <p className="mt-2 text-sm leading-6 text-neutral-600">
+                          {address.houseNo}, {address.addressLine}
+                          <br />
+                          {address.city}, {address.state} {address.pincode}
+                        </p>
+
+                        <p className="mt-2 text-sm text-neutral-600">
+                          +91 {address.phone}
+                        </p>
+                      </div>
                     </div>
+                  </button>
+
+                  <div className="absolute right-4 top-4 flex items-center gap-1 sm:right-5 sm:top-5 sm:gap-2">
+                    <button
+                      type="button"
+                      onClick={() => openEditDrawer(address)}
+                      aria-label="Edit address"
+                      className="rounded-full p-2 text-neutral-500 transition hover:bg-neutral-100 hover:text-black"
+                    >
+                      <Edit3 size={17} />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(address.id)}
+                      aria-label="Delete address"
+                      className="rounded-full p-2 text-neutral-500 transition hover:bg-neutral-100 hover:text-black"
+                    >
+                      <Trash2 size={17} />
+                    </button>
                   </div>
-                </button>
-
-                <div className="absolute right-5 top-5 flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => openEditDrawer(address)}
-                    aria-label="Edit address"
-                    className="rounded-full p-2 text-neutral-500 transition hover:bg-neutral-100 hover:text-black"
-                  >
-                    <Edit3 size={17} />
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(address.id)}
-                    aria-label="Delete address"
-                    className="rounded-full p-2 text-neutral-500 transition hover:bg-neutral-100 hover:text-black"
-                  >
-                    <Trash2 size={17} />
-                  </button>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
 
-          <button
-            type="button"
-            onClick={openAddDrawer}
-            className="flex min-h-36 w-full items-center justify-center rounded-2xl border border-dashed border-neutral-300 px-6 text-center transition hover:border-black hover:bg-neutral-50"
-          >
-            <span>
-              <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300">
-                <Plus size={20} />
-              </span>
+            <button
+              type="button"
+              onClick={openAddDrawer}
+              className="flex min-h-32 w-full items-center justify-center rounded-2xl border border-dashed border-neutral-300 px-6 text-center transition hover:border-black hover:bg-neutral-50 sm:min-h-36"
+            >
+              <span>
+                <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300">
+                  <Plus size={20} />
+                </span>
 
-              <span className="mt-3 block text-sm font-semibold">
-                Add New Address
-              </span>
+                <span className="mt-3 block text-sm font-semibold">
+                  Add New Address
+                </span>
 
-              <span className="mt-1 block text-xs text-neutral-500">
-                Add another delivery address
+                <span className="mt-1 block text-xs text-neutral-500">
+                  Add another delivery address
+                </span>
               </span>
-            </span>
-          </button>
-        </div>
+            </button>
+          </div>
+        )}
       </section>
 
       {isDrawerOpen && (

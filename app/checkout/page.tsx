@@ -12,6 +12,18 @@ import EmailLoginModal from "@/components/auth/EmailLoginModal";
 import OTPVerificationModal from "@/components/auth/OTPVerificationModal";
 import AddressSection from "@/components/checkout/AddressSection";
 
+interface CheckoutAddress {
+  id: string;
+  fullName: string;
+  phone: string;
+  pincode: string;
+  houseNo: string;
+  addressLine: string;
+  city: string;
+  state: string;
+  isDefault: boolean;
+}
+
 export default function CheckoutPage() {
   const { items, subtotal } = useCart();
 
@@ -19,6 +31,8 @@ export default function CheckoutPage() {
   const [isOTPOpen, setIsOTPOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [checkoutEmail, setCheckoutEmail] = useState("");
+  const [selectedAddress, setSelectedAddress] =
+    useState<CheckoutAddress | null>(null);
 
   function handleEmailContinue(email: string) {
     setCheckoutEmail(email);
@@ -29,6 +43,18 @@ export default function CheckoutPage() {
   function handleOTPVerified() {
     setIsOTPOpen(false);
     setIsAuthenticated(true);
+  }
+
+  function handleAddressChange(address: CheckoutAddress | null) {
+    setSelectedAddress(address);
+  }
+
+  function handleContinueToPayment() {
+    if (!selectedAddress) {
+      return;
+    }
+
+    console.log("Selected checkout address:", selectedAddress);
   }
 
   if (items.length === 0) {
@@ -100,7 +126,7 @@ export default function CheckoutPage() {
               </div>
             </div>
           ) : (
-            <AddressSection />
+            <AddressSection onAddressChange={handleAddressChange} />
           )}
         </section>
 
@@ -181,10 +207,18 @@ export default function CheckoutPage() {
           {isAuthenticated && (
             <button
               type="button"
-              className="mt-7 flex h-14 w-full items-center justify-center rounded-full bg-black px-6 text-sm font-semibold text-white transition hover:bg-neutral-800"
+              onClick={handleContinueToPayment}
+              disabled={!selectedAddress}
+              className="mt-7 flex h-14 w-full items-center justify-center rounded-full bg-black px-6 text-sm font-semibold text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:bg-neutral-200 disabled:text-neutral-500"
             >
               Continue to Payment
             </button>
+          )}
+
+          {isAuthenticated && !selectedAddress && (
+            <p className="mt-3 text-center text-xs text-neutral-500">
+              Select a delivery address to continue.
+            </p>
           )}
         </aside>
       </div>
