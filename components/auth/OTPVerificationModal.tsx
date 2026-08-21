@@ -26,6 +26,7 @@ export default function OTPVerificationModal({
 
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isResending, setIsResending] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(OTP_EXPIRY_SECONDS);
 
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
@@ -38,6 +39,7 @@ export default function OTPVerificationModal({
     setOtp(Array(OTP_LENGTH).fill(""));
     setError("");
     setIsLoading(false);
+    setIsResending(false);
     setSecondsLeft(OTP_EXPIRY_SECONDS);
 
     requestAnimationFrame(() => {
@@ -128,6 +130,40 @@ export default function OTPVerificationModal({
     inputRefs.current[focusIndex]?.focus();
   }
 
+  async function handleResendOTP() {
+    if (isResending || secondsLeft > 0) {
+      return;
+    }
+
+    setError("");
+    setIsResending(true);
+
+    try {
+      const { error } = await authClient.emailOtp.sendVerificationOtp({
+        email,
+        type: "sign-in",
+      });
+
+      if (error) {
+        setError(error.message || "Unable to resend the verification code.");
+        return;
+      }
+
+      setOtp(Array(OTP_LENGTH).fill(""));
+      setSecondsLeft(OTP_EXPIRY_SECONDS);
+
+      requestAnimationFrame(() => {
+        inputRefs.current[0]?.focus();
+      });
+    } catch (error) {
+      console.error("OTP resend failed:", error);
+
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setIsResending(false);
+    }
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -161,7 +197,7 @@ export default function OTPVerificationModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
-      <div className="relative w-full max-w-md rounded-[24px] bg-white px-8 py-10 shadow-2xl sm:px-12">
+      <div className="relative w-full max-w-md rounded-[24px] bg-white px-6 py-8 shadow-2xl sm:px-12 sm:py-10">
         <button
           type="button"
           onClick={onClose}
@@ -228,7 +264,9 @@ export default function OTPVerificationModal({
 
           <button
             type="submit"
-            disabled={!isComplete || isLoading || secondsLeft <= 0}
+            disabled={
+              !isComplete || isLoading || isResending || secondsLeft <= 0
+            }
             className="mt-7 h-12 w-full rounded-full bg-black text-sm font-semibold text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:bg-neutral-200 disabled:text-neutral-500"
           >
             {isLoading ? "Verifying..." : "Verify & Continue"}
@@ -244,13 +282,23 @@ export default function OTPVerificationModal({
               </span>
             </p>
           ) : (
-            <p className="text-red-600">This code has expired.</p>
+            <div className="space-y-3">
+              <p className="text-red-600">This code has expired.</p>
+
+              <button
+                type="button"
+                onClick={handleResendOTP}
+                disabled={isResending}
+                className="font-semibold text-black underline underline-offset-4 transition hover:text-neutral-600 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isResending ? "Sending new code..." : "Resend code"}
+              </button>
+            </div>
           )}
         </div>
 
         <p className="mt-5 text-center text-xs leading-5 text-neutral-500">
-          Didn't receive the code? You can request a new one after the timer
-          ends.
+          Didn't receive the code? Check your spam or promotions folder.
         </p>
       </div>
     </div>

@@ -3,8 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
 
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+import SiteChrome from "@/components/layout/SiteChrome";
 
 import { CartProvider } from "@/lib/cart/cart-context";
 import { WishlistProvider } from "@/lib/wishlist/wishlist-context";
@@ -38,11 +37,9 @@ export default function RootLayout({
       <body className="min-h-full bg-white text-neutral-900">
         <CartProvider>
           <WishlistProvider>
-            <Navbar />
-
-            <main className="min-h-screen">{children}</main>
-
-            <Footer />
+            <SiteChrome>
+              <main className="min-h-screen">{children}</main>
+            </SiteChrome>
           </WishlistProvider>
         </CartProvider>
       </body>
