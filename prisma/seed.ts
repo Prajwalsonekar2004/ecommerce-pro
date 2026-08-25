@@ -2,113 +2,221 @@ import { PrismaClient, Gender, Size } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-async function createProduct(data: {
+async function upsertProduct(data: {
   name: string;
   slug: string;
   description: string;
-  // material: string;
-  // fit: string;
-  // pattern: string;
-  // careInstructions: string;
+
+  material?: string;
+  fit?: string;
+  pattern?: string;
+  careInstructions?: string;
+
   sku: string;
   gender: Gender;
-  thumbnail: string;
+
+  thumbnail?: string;
+
   price: number;
   comparePrice?: number;
+
   categoryId: string;
   brandId: string;
-  collection: string;
+
+  collection?: string;
+
+  stock: number;
+  rating?: number;
+  reviewCount?: number;
+
   featured?: boolean;
   newArrival?: boolean;
+  trending?: boolean;
   isOnSale?: boolean;
-  images: string[];
+
+  images: {
+    url: string;
+    alt?: string;
+    isPrimary?: boolean;
+  }[];
+
   colors: {
     name: string;
     hexCode: string;
   }[];
+
+  sizes: {
+    size: Size;
+    quantity: number;
+  }[];
 }) {
-  return prisma.product.create({
-    data: {
-      name: data.name,
-      slug: data.slug,
-      description: data.description,
-      // material: data.material,
-      // fit: data.fit,
-      // pattern: data.pattern,
-      // careInstructions: data.careInstructions,
-      sku: data.sku,
-
-      thumbnail: data.thumbnail,
-
-      price: data.price,
-      comparePrice: data.comparePrice,
-
-      gender: data.gender,
-      collection: data.collection,
-
-      stock: 50,
-      rating: 4.8,
-      reviewCount: 150,
-
-      isFeatured: data.featured ?? false,
-      isNewArrival: data.newArrival ?? false,
-
-      brandId: data.brandId,
-      categoryId: data.categoryId,
-
-      images: {
-        create: data.images.map((url, index) => ({
-          url,
-          displayOrder: index,
-          isPrimary: index === 0,
-        })),
+  return prisma.$transaction(async (tx) => {
+    const existingProduct = await tx.product.findUnique({
+      where: {
+        slug: data.slug,
       },
-
-      colors: {
-        create: data.colors.map((color, index) => ({
-          ...color,
-          displayOrder: index,
-        })),
+      select: {
+        id: true,
       },
+    });
 
-      sizes: {
-        create: [
-          {
-            size: Size.S,
-            quantity: 20,
+    if (existingProduct) {
+      await tx.productImage.deleteMany({
+        where: {
+          productId: existingProduct.id,
+        },
+      });
+
+      await tx.productColor.deleteMany({
+        where: {
+          productId: existingProduct.id,
+        },
+      });
+
+      await tx.productSize.deleteMany({
+        where: {
+          productId: existingProduct.id,
+        },
+      });
+
+      return tx.product.update({
+        where: {
+          id: existingProduct.id,
+        },
+        data: {
+          name: data.name,
+          description: data.description,
+
+          material: data.material,
+          fit: data.fit,
+          pattern: data.pattern,
+          careInstructions: data.careInstructions,
+
+          sku: data.sku,
+          gender: data.gender,
+
+          thumbnail: data.thumbnail,
+
+          price: data.price,
+          comparePrice: data.comparePrice,
+
+          categoryId: data.categoryId,
+          brandId: data.brandId,
+
+          collection: data.collection,
+
+          stock: data.stock,
+          rating: data.rating ?? 0,
+          reviewCount: data.reviewCount ?? 0,
+
+          isFeatured: data.featured ?? false,
+          isNewArrival: data.newArrival ?? false,
+          isTrending: data.trending ?? false,
+          isOnSale: data.isOnSale ?? false,
+
+          images: {
+            create: data.images.map((image, index) => ({
+              url: image.url,
+              alt: image.alt,
+              displayOrder: index,
+              isPrimary: image.isPrimary ?? index === 0,
+            })),
           },
-          {
-            size: Size.M,
-            quantity: 20,
+
+          colors: {
+            create: data.colors.map((color, index) => ({
+              name: color.name,
+              hexCode: color.hexCode,
+              displayOrder: index,
+            })),
           },
-          {
-            size: Size.L,
-            quantity: 20,
+
+          sizes: {
+            create: data.sizes.map((size) => ({
+              size: size.size,
+              quantity: size.quantity,
+            })),
           },
-          {
-            size: Size.XL,
-            quantity: 20,
-          },
-        ],
+        },
+      });
+    }
+
+    return tx.product.create({
+      data: {
+        name: data.name,
+        slug: data.slug,
+        description: data.description,
+
+        material: data.material,
+        fit: data.fit,
+        pattern: data.pattern,
+        careInstructions: data.careInstructions,
+
+        sku: data.sku,
+        gender: data.gender,
+
+        thumbnail: data.thumbnail,
+
+        price: data.price,
+        comparePrice: data.comparePrice,
+
+        categoryId: data.categoryId,
+        brandId: data.brandId,
+
+        collection: data.collection,
+
+        stock: data.stock,
+        rating: data.rating ?? 0,
+        reviewCount: data.reviewCount ?? 0,
+
+        isFeatured: data.featured ?? false,
+        isNewArrival: data.newArrival ?? false,
+        isTrending: data.trending ?? false,
+        isOnSale: data.isOnSale ?? false,
+
+        images: {
+          create: data.images.map((image, index) => ({
+            url: image.url,
+            alt: image.alt,
+            displayOrder: index,
+            isPrimary: image.isPrimary ?? index === 0,
+          })),
+        },
+
+        colors: {
+          create: data.colors.map((color, index) => ({
+            name: color.name,
+            hexCode: color.hexCode,
+            displayOrder: index,
+          })),
+        },
+
+        sizes: {
+          create: data.sizes.map((size) => ({
+            size: size.size,
+            quantity: size.quantity,
+          })),
+        },
       },
-    },
+    });
   });
 }
 
 async function main() {
   console.log("Cleaning database...");
 
-  await prisma.productSize.deleteMany();
-  await prisma.productColor.deleteMany();
-  await prisma.productImage.deleteMany();
-  await prisma.product.deleteMany();
-  await prisma.category.deleteMany();
-  await prisma.brand.deleteMany();
-
   console.log("Creating brand...");
 
-  const blackheadfashion = await prisma.brand.create({
-    data: {
+  const blackheadfashion = await prisma.brand.upsert({
+    where: {
+      slug: "blackheadfashion",
+    },
+    update: {
+      name: "BlackHeadFashion",
+      logo: "/images/logo/logo.svg",
+      isActive: true,
+    },
+    create: {
       name: "BlackHeadFashion",
       slug: "blackheadfashion",
       logo: "/images/logo/logo.svg",
@@ -117,24 +225,48 @@ async function main() {
 
   console.log("Creating categories...");
 
-  const tshirts = await prisma.category.create({
-    data: {
+  const tshirts = await prisma.category.upsert({
+    where: {
+      slug: "t-shirts",
+    },
+    update: {
+      name: "T-Shirts",
+      image: "/images/products/tshirts/shirt-7.jpg",
+      isActive: true,
+    },
+    create: {
       name: "T-Shirts",
       slug: "t-shirts",
       image: "/images/products/tshirts/shirt-7.jpg",
     },
   });
 
-  const shirts = await prisma.category.create({
-    data: {
+  const shirts = await prisma.category.upsert({
+    where: {
+      slug: "shirts",
+    },
+    update: {
+      name: "Shirts",
+      image: "/images/categories/shirts.jpg",
+      isActive: true,
+    },
+    create: {
       name: "Shirts",
       slug: "shirts",
       image: "/images/categories/shirts.jpg",
     },
   });
 
-  const jeans = await prisma.category.create({
-    data: {
+  const jeans = await prisma.category.upsert({
+    where: {
+      slug: "jeans",
+    },
+    update: {
+      name: "Jeans",
+      image: "/images/categories/jeans.jpg",
+      isActive: true,
+    },
+    create: {
       name: "Jeans",
       slug: "jeans",
       image: "/images/categories/jeans.jpg",
@@ -143,7 +275,7 @@ async function main() {
 
   console.log("Creating products...");
 
-  await createProduct({
+  await upsertProduct({
     name: "Essential Oversized Tee",
     slug: "essential-oversized-tee-black",
     description:
@@ -166,7 +298,21 @@ async function main() {
     newArrival: true,
     isOnSale: false,
 
-    images: ["/images/products/real_products_img/IMG_9441.PNG"],
+    stock: 50,
+
+    sizes: [
+      { size: "S", quantity: 10 },
+      { size: "M", quantity: 15 },
+      { size: "L", quantity: 15 },
+      { size: "XL", quantity: 10 },
+    ],
+
+    images: [
+      {
+        url: "/images/products/real_products_img/IMG_9441.PNG",
+        isPrimary: true,
+      },
+    ],
 
     colors: [
       {
@@ -180,7 +326,7 @@ async function main() {
     ],
   });
 
-  await createProduct({
+  await upsertProduct({
     name: "Classic Heavy Tee",
     slug: "classic-heavy-tee",
     description:
@@ -203,7 +349,21 @@ async function main() {
     newArrival: false,
     isOnSale: false,
 
-    images: ["/images/products/real_products_img/IMG_9442.PNG"],
+    stock: 50,
+
+    sizes: [
+      { size: "S", quantity: 10 },
+      { size: "M", quantity: 15 },
+      { size: "L", quantity: 15 },
+      { size: "XL", quantity: 10 },
+    ],
+
+    images: [
+      {
+        url: "/images/products/real_products_img/IMG_9442.PNG",
+        isPrimary: true,
+      },
+    ],
 
     colors: [
       {
@@ -217,7 +377,7 @@ async function main() {
     ],
   });
 
-  await createProduct({
+  await upsertProduct({
     name: "Minimal Logo Tee",
     slug: "minimal-logo-tee",
     description:
@@ -240,7 +400,21 @@ async function main() {
     newArrival: true,
     isOnSale: false,
 
-    images: ["/images/products/real_products_img/IMG_9443.PNG"],
+    stock: 50,
+
+    sizes: [
+      { size: "S", quantity: 10 },
+      { size: "M", quantity: 15 },
+      { size: "L", quantity: 15 },
+      { size: "XL", quantity: 10 },
+    ],
+
+    images: [
+      {
+        url: "/images/products/real_products_img/IMG_9443.PNG",
+        isPrimary: true,
+      },
+    ],
 
     colors: [
       {
@@ -254,7 +428,7 @@ async function main() {
     ],
   });
 
-  await createProduct({
+  await upsertProduct({
     name: "Oxford Shirt",
     slug: "oxford-shirt",
     description: "Premium shirt crafted for everyday Fashion.",
@@ -276,7 +450,21 @@ async function main() {
     newArrival: true,
     isOnSale: false,
 
-    images: ["/images/products/real_products_img/IMG_9444.PNG"],
+    stock: 50,
+
+    sizes: [
+      { size: "S", quantity: 10 },
+      { size: "M", quantity: 15 },
+      { size: "L", quantity: 15 },
+      { size: "XL", quantity: 10 },
+    ],
+
+    images: [
+      {
+        url: "/images/products/real_products_img/IMG_9444.PNG",
+        isPrimary: true,
+      },
+    ],
 
     colors: [
       {
@@ -290,7 +478,7 @@ async function main() {
     ],
   });
 
-  await createProduct({
+  await upsertProduct({
     name: "Casual Shirt",
     slug: "casual-linen-shirt",
     description: "Premium shirt crafted for everyday Fashion.",
@@ -312,7 +500,21 @@ async function main() {
     newArrival: false,
     isOnSale: false,
 
-    images: ["/images/products/real_products_img/IMG_9445.PNG"],
+    stock: 50,
+
+    sizes: [
+      { size: "S", quantity: 10 },
+      { size: "M", quantity: 15 },
+      { size: "L", quantity: 15 },
+      { size: "XL", quantity: 10 },
+    ],
+
+    images: [
+      {
+        url: "/images/products/real_products_img/IMG_9445.PNG",
+        isPrimary: true,
+      },
+    ],
 
     colors: [
       {
@@ -326,7 +528,7 @@ async function main() {
     ],
   });
 
-  await createProduct({
+  await upsertProduct({
     name: "Formal Shirt",
     slug: "formal-shirt",
     description: "Premium shirt crafted for everyday Fashion.",
@@ -348,7 +550,21 @@ async function main() {
     newArrival: true,
     isOnSale: false,
 
-    images: ["/images/products/real_products_img/IMG_9446.PNG"],
+    stock: 50,
+
+    sizes: [
+      { size: "S", quantity: 10 },
+      { size: "M", quantity: 15 },
+      { size: "L", quantity: 15 },
+      { size: "XL", quantity: 10 },
+    ],
+
+    images: [
+      {
+        url: "/images/products/real_products_img/IMG_9446.PNG",
+        isPrimary: true,
+      },
+    ],
 
     colors: [
       {
@@ -362,7 +578,7 @@ async function main() {
     ],
   });
 
-  await createProduct({
+  await upsertProduct({
     name: "Slim Fit Jeans",
     slug: "slim-fit-jeans",
     description: "Premium jeans crafted for everyday Fashion.",
@@ -384,7 +600,21 @@ async function main() {
     newArrival: true,
     isOnSale: false,
 
-    images: ["/images/products/real_products_img/IMG_9447.PNG"],
+    stock: 50,
+
+    sizes: [
+      { size: "S", quantity: 10 },
+      { size: "M", quantity: 15 },
+      { size: "L", quantity: 15 },
+      { size: "XL", quantity: 10 },
+    ],
+
+    images: [
+      {
+        url: "/images/products/real_products_img/IMG_9447.PNG",
+        isPrimary: true,
+      },
+    ],
 
     colors: [
       {
@@ -398,7 +628,7 @@ async function main() {
     ],
   });
 
-  await createProduct({
+  await upsertProduct({
     name: "Relaxed Fit Jeans",
     slug: "relaxed-fit-jeans",
     description: "Premium jeans crafted for everyday Fashion.",
@@ -420,7 +650,21 @@ async function main() {
     newArrival: false,
     isOnSale: false,
 
-    images: ["/images/products/real_products_img/IMG_9448.PNG"],
+    stock: 50,
+
+    sizes: [
+      { size: "S", quantity: 10 },
+      { size: "M", quantity: 15 },
+      { size: "L", quantity: 15 },
+      { size: "XL", quantity: 10 },
+    ],
+
+    images: [
+      {
+        url: "/images/products/real_products_img/IMG_9448.PNG",
+        isPrimary: true,
+      },
+    ],
 
     colors: [
       {
@@ -434,7 +678,7 @@ async function main() {
     ],
   });
 
-  await createProduct({
+  await upsertProduct({
     name: "Denim Pants",
     slug: "denim-pants",
     description: "Premium jeans crafted for everyday Fashion.",
@@ -456,7 +700,21 @@ async function main() {
     newArrival: true,
     isOnSale: false,
 
-    images: ["/images/products/real_products_img/IMG_9449.PNG"],
+    stock: 50,
+
+    sizes: [
+      { size: "S", quantity: 10 },
+      { size: "M", quantity: 15 },
+      { size: "L", quantity: 15 },
+      { size: "XL", quantity: 10 },
+    ],
+
+    images: [
+      {
+        url: "/images/products/real_products_img/IMG_9449.PNG",
+        isPrimary: true,
+      },
+    ],
 
     colors: [
       {
@@ -470,7 +728,7 @@ async function main() {
     ],
   });
 
-  await createProduct({
+  await upsertProduct({
     name: "Black Pants",
     slug: "black-pants",
     description: "Premium jeans crafted for everyday Fashion.",
@@ -492,7 +750,21 @@ async function main() {
     newArrival: true,
     isOnSale: false,
 
-    images: ["/images/products/real_products_img/IMG_9450.PNG"],
+    stock: 50,
+
+    sizes: [
+      { size: "S", quantity: 10 },
+      { size: "M", quantity: 15 },
+      { size: "L", quantity: 15 },
+      { size: "XL", quantity: 10 },
+    ],
+
+    images: [
+      {
+        url: "/images/products/real_products_img/IMG_9450.PNG",
+        isPrimary: true,
+      },
+    ],
 
     colors: [
       {
