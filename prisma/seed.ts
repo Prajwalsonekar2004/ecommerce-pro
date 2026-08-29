@@ -203,8 +203,6 @@ async function upsertProduct(data: {
 }
 
 async function main() {
-  console.log("Cleaning database...");
-
   console.log("Creating brand...");
 
   const blackheadfashion = await prisma.brand.upsert({
@@ -274,6 +272,82 @@ async function main() {
   });
 
   console.log("Creating products...");
+
+  await upsertProduct({
+    name: "Ribbed Contrast Collar Polo",
+    slug: "ribbed-contrast-collar-polo-beige",
+    description:
+      "Premium ribbed knit polo with a clean contrast collar, designed for a refined everyday look.",
+
+    material: "Ribbed Knit",
+    fit: "Regular Fit",
+    pattern: "Ribbed",
+    careInstructions: "Machine wash cold. Do not bleach. Dry flat.",
+
+    sku: "BHF-TS-011",
+    gender: Gender.MEN,
+
+    thumbnail: "/images/products/tshirts/tshirt-ribbed-beige-01.jpg",
+
+    price: 1,
+    comparePrice: 2,
+
+    categoryId: tshirts.id,
+    brandId: blackheadfashion.id,
+
+    collection: "Essentials",
+
+    stock: 10,
+    rating: 0,
+    reviewCount: 0,
+
+    featured: false,
+    newArrival: true,
+    trending: false,
+    isOnSale: true,
+
+    images: [
+      {
+        url: "/images/products/tshirts/tshirt-ribbed-beige-01.jpg",
+        alt: "Ribbed Contrast Collar Polo front view",
+        isPrimary: true,
+      },
+      {
+        url: "/images/products/tshirts/tshirt-ribbed-beige-02.jpg",
+        alt: "Ribbed Contrast Collar Polo side view",
+      },
+      {
+        url: "/images/products/tshirts/tshirt-ribbed-beige-03.jpg",
+        alt: "Ribbed Contrast Collar Polo detail view",
+      },
+      {
+        url: "/images/products/tshirts/tshirt-ribbed-beige-04.jpg",
+        alt: "Ribbed Contrast Collar Polo back view",
+      },
+      {
+        url: "/images/products/tshirts/tshirt-ribbed-beige-05.jpg",
+        alt: "Ribbed Contrast Collar Polo sleeve detail",
+      },
+      {
+        url: "/images/products/tshirts/tshirt-ribbed-beige-06.jpg",
+        alt: "Ribbed Contrast Collar Polo collar detail",
+      },
+    ],
+
+    colors: [
+      {
+        name: "Beige",
+        hexCode: "#C8B9A3",
+      },
+    ],
+
+    sizes: [
+      { size: "S", quantity: 10 },
+      { size: "M", quantity: 15 },
+      { size: "L", quantity: 15 },
+      { size: "XL", quantity: 10 },
+    ],
+  });
 
   await upsertProduct({
     name: "Essential Oversized Tee",

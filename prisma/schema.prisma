@@ -228,12 +228,15 @@ model Order {
 
   currency String @default("INR")
 
-  paymentStatus PaymentStatus  @default(PENDING)
-  paymentMethod PaymentMethod?
+  paymentStatus   PaymentStatus    @default(PENDING)
+  paymentProvider PaymentProvider?
+  paymentMethod   PaymentMethod?
 
-  razorpayOrderId   String? @unique
-  razorpayPaymentId String? @unique
-  razorpaySignature String?
+  razorpayOrderId      String?   @unique
+  razorpayPaymentId    String?   @unique
+  razorpaySignature    String?
+  paymentFailureReason String?
+  paidAt               DateTime?
 
   shippingFullName    String
   shippingPhone       String
@@ -297,6 +300,31 @@ enum PaymentStatus {
   REFUNDED
 }
 
-enum PaymentMethod {
+enum PaymentProvider {
   RAZORPAY
+}
+
+enum PaymentMethod {
+  CARD
+  UPI
+  NETBANKING
+  WALLET
+  PAYLATER
+}
+
+model RazorpayWebhookEvent {
+  id        String @id @default(cuid())
+  eventId   String @unique
+  eventType String
+
+  payload Json
+
+  processed Boolean @default(false)
+
+  processedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([eventType])
+  @@index([createdAt])
 }

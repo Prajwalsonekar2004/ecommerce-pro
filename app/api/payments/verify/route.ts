@@ -1,14 +1,45 @@
 import crypto from "crypto";
+
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { razorpay } from "@/lib/razorpay";
 
 interface VerifyPaymentBody {
   razorpayPaymentId: string;
   razorpayOrderId: string;
   razorpaySignature: string;
+}
+
+type RazorpayPaymentMethod =
+  | "card"
+  | "upi"
+  | "netbanking"
+  | "wallet"
+  | "paylater";
+
+function mapPaymentMethod(method: string) {
+  switch (method as RazorpayPaymentMethod) {
+    case "card":
+      return "CARD" as const;
+
+    case "upi":
+      return "UPI" as const;
+
+    case "netbanking":
+      return "NETBANKING" as const;
+
+    case "wallet":
+      return "WALLET" as const;
+
+    case "paylater":
+      return "PAYLATER" as const;
+
+    default:
+      return null;
+  }
 }
 
 export async function POST(request: Request) {
@@ -45,6 +76,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Order not found." }, { status: 404 });
     }
 
+    /*
+     * Idempotency:
+     * If this payment was already successfully processed,
+     * don't process it again.
+     */
     if (
       order.paymentStatus === "PAID" &&
       order.razorpayPaymentId === razorpayPaymentId
@@ -57,7 +93,9 @@ export async function POST(request: Request) {
       });
     }
 
-    if (!process.env.RAZORPAY_KEY_SECRET) {
+    const razorpaySecret = process.env.RAZORPAY_KEY_SECRET;
+
+    if (!razorpaySecret) {
       console.error("RAZORPAY_KEY_SECRET is not configured.");
 
       return NextResponse.json(
@@ -66,8 +104,14 @@ export async function POST(request: Request) {
       );
     }
 
+    /*
+     * 1. Verify Razorpay signature.
+     *
+     * Razorpay signs:
+     * razorpay_order_id|razorpay_payment_id
+     */
     const generatedSignature = crypto
-      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .createHmac("sha256", razorpaySecret)
       .update(`${order.razorpayOrderId}|${razorpayPaymentId}`)
       .digest("hex");
 
@@ -94,16 +138,69 @@ export async function POST(request: Request) {
       );
     }
 
+    /*
+     * 2. Fetch the payment directly from Razorpay.
+     *
+     * Never trust only the browser response.
+     */
+    const payment = await razorpay.payments.fetch(razorpayPaymentId);
+
+    /*
+     * 3. Make sure this payment actually belongs
+     *    to the Razorpay order we created.
+     */
+    if (payment.order_id !== order.razorpayOrderId) {
+      return NextResponse.json(
+        { error: "Payment does not belong to this order." },
+        { status: 400 },
+      );
+    }
+
+    /*
+     * 4. Verify the amount.
+     *
+     * Razorpay amount is stored in paise.
+     */
+    const expectedAmount = Math.round(Number(order.totalAmount) * 100);
+
+    if (payment.amount !== expectedAmount) {
+      return NextResponse.json(
+        { error: "Payment amount does not match the order." },
+        { status: 400 },
+      );
+    }
+
+    /*
+     * 5. Only captured payments can become PAID.
+     */
+    if (payment.status !== "captured" || payment.captured !== true) {
+      return NextResponse.json(
+        {
+          error: "Payment has not been captured yet.",
+        },
+        { status: 400 },
+      );
+    }
+
+    const paymentMethod = mapPaymentMethod(payment.method);
+
     const updatedOrder = await prisma.order.update({
       where: {
         id: order.id,
       },
+
       data: {
         paymentStatus: "PAID",
         status: "CONFIRMED",
-        paymentMethod: "RAZORPAY",
+
+        paymentProvider: "RAZORPAY",
+        paymentMethod,
+
         razorpayPaymentId,
         razorpaySignature,
+
+        paymentFailureReason: null,
+        paidAt: new Date(),
       },
     });
 

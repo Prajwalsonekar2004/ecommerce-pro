@@ -23,11 +23,13 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-white text-neutral-900">
-      <div className="mx-auto max-w-[1180px] px-5 py-8 sm:px-6 lg:py-10">
-        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-12">
+      <div className="mx-auto max-w-[1200px] px-5 py-8 sm:px-6 lg:py-10">
+        <div className="grid items-start gap-7 lg:grid-cols-[520px_minmax(0,1fr)]">
+          {/* Product gallery */}
           <ProductGallery product={product} />
 
-          <div className="pt-1">
+          {/* Product details */}
+          <div className="min-w-0 pt-1">
             <ProductInfo product={product} />
 
             <ProductActions product={product} />
