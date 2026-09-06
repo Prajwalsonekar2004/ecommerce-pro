@@ -45,7 +45,6 @@ export default function CheckoutPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   useEffect(() => {
     sessionStorage.removeItem(CHECKOUT_AUTH_KEY);
-    setIsAuthenticated(false);
     window.dispatchEvent(new Event("checkout-authenticated"));
   }, []);
 

@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
+import { success } from "better-auth";
 
 const SUPPORTED_EVENTS = new Set([
   "payment.captured",
@@ -162,26 +163,24 @@ export async function POST(request: Request) {
      * eventId is unique in our database, so duplicate delivery
      * cannot process the same event twice.
      */
-    const existingEvent = await prisma.razorpayWebhookEvent.findUnique({
+    const eventRecord = await prisma.razorpayWebhookEvent.upsert({
       where: {
         eventId,
       },
+
+      update: {},
+
+      create: {
+        eventId,
+        eventType,
+        payload: JSON.parse(rawBody),
+      },
     });
 
-    if (existingEvent?.processed) {
+    if (eventRecord.processed) {
       return NextResponse.json({
         success: true,
         duplicate: true,
-      });
-    }
-
-    if (!existingEvent) {
-      await prisma.razorpayWebhookEvent.create({
-        data: {
-          eventId,
-          eventType,
-          payload: JSON.parse(rawBody),
-        },
       });
     }
 
@@ -190,17 +189,7 @@ export async function POST(request: Request) {
     const razorpayOrderId = payment?.order_id;
 
     if (!razorpayOrderId) {
-      if (existingEvent) {
-        await prisma.razorpayWebhookEvent.update({
-          where: {
-            eventId,
-          },
-          data: {
-            processed: true,
-            processedAt: new Date(),
-          },
-        });
-      } else {
+      if (eventRecord) {
         await prisma.razorpayWebhookEvent.update({
           where: {
             eventId,

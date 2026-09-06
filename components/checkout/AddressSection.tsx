@@ -95,7 +95,9 @@ export default function AddressSection({
   }
 
   useEffect(() => {
-    loadAddresses();
+    // Address loading updates component state asynchronously.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void loadAddresses();
   }, []);
 
   function openAddDrawer() {

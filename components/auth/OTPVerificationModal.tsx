@@ -35,7 +35,8 @@ export default function OTPVerificationModal({
     if (!open) {
       return;
     }
-
+    // Reset OTP state when the verification modal opens or email changes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOtp(Array(OTP_LENGTH).fill(""));
     setError("");
     setIsLoading(false);
@@ -298,7 +299,7 @@ export default function OTPVerificationModal({
         </div>
 
         <p className="mt-5 text-center text-xs leading-5 text-neutral-500">
-          Didn't receive the code? Check your spam or promotions folder.
+          Didn&apos;t receive the code? Check your spam or promotions folder.
         </p>
       </div>
     </div>

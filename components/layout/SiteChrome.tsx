@@ -22,12 +22,12 @@ export default function SiteChrome({
 
   useEffect(() => {
     if (!isCheckoutFlow) {
-      setCheckoutAuthenticated(false);
       return;
     }
 
     const authenticated = sessionStorage.getItem(CHECKOUT_AUTH_KEY) === "true";
-
+    // Read checkout authentication state from sessionStorage on route entry.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCheckoutAuthenticated(authenticated);
   }, [isCheckoutFlow]);
 
