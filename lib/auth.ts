@@ -8,6 +8,10 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL,
+  trustedOrigins: [
+    "http://localhost:3000",
+    "https://ecommerce-pro-bice.vercel.app",
+  ],
   secret: process.env.BETTER_AUTH_SECRET,
   database: prismaAdapter(prisma, {
     provider: "postgresql",

@@ -184,12 +184,20 @@ export default function CartPage() {
             </div>
           </div>
 
-          <Link
+          <button
+            type="button"
+            disabled
+            className="mt-8 flex h-14 w-full cursor-not-allowed items-center justify-center rounded-full bg-neutral-200 px-6 text-sm font-semibold text-neutral-500"
+          >
+            Checkout
+          </button>
+
+          {/* <Link
             href="/checkout"
             className="mt-8 flex h-14 items-center justify-center rounded-full bg-black px-6 text-sm font-semibold text-white transition hover:bg-neutral-800"
           >
             Checkout
-          </Link>
+          </Link> */}
 
           <Link
             href="/products"
