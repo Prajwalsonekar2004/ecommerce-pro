@@ -101,6 +101,7 @@ export async function POST(request: Request) {
       newArrival,
       trending,
       isOnSale,
+      isActive,
       images = [],
       colors = [],
       sizes = [],
@@ -226,7 +227,6 @@ export async function POST(request: Request) {
           typeof collection === "string" && collection.trim()
             ? collection.trim()
             : null,
-
         stock,
 
         rating: 0,
@@ -236,6 +236,7 @@ export async function POST(request: Request) {
         isNewArrival: newArrival === true,
         isTrending: trending === true,
         isOnSale: isOnSale === true,
+        isActive: isActive !== false,
 
         images: {
           create: Array.isArray(images)
