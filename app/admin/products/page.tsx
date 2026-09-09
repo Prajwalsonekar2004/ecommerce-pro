@@ -1,3 +1,4 @@
+import ProductSearch from "@/components/admin/ProductSearch";
 import ProductActions from "@/components/admin/ProductActions";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,7 +8,13 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-export default async function AdminProductsPage() {
+export default async function AdminProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ search?: string }>;
+}) {
+  const { search } = await searchParams;
+  const normalizedSearch = search?.trim() ?? "";
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -30,6 +37,24 @@ export default async function AdminProductsPage() {
   }
 
   const products = await prisma.product.findMany({
+    where: normalizedSearch
+      ? {
+          OR: [
+            {
+              name: {
+                contains: normalizedSearch,
+                mode: "insensitive",
+              },
+            },
+            {
+              sku: {
+                contains: normalizedSearch,
+                mode: "insensitive",
+              },
+            },
+          ],
+        }
+      : undefined,
     orderBy: {
       createdAt: "desc",
     },
@@ -59,6 +84,10 @@ export default async function AdminProductsPage() {
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight">Products</h1>
+
+            <div className="mt-6">
+              <ProductSearch />
+            </div>
 
             <p className="mt-1 text-sm text-neutral-500">
               Manage your store products
