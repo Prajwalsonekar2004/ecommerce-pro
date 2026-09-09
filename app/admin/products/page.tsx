@@ -1,3 +1,4 @@
+import ProductFilters from "@/components/admin/ProductFilters";
 import ProductSearch from "@/components/admin/ProductSearch";
 import ProductActions from "@/components/admin/ProductActions";
 import Image from "next/image";
@@ -11,10 +12,19 @@ import { prisma } from "@/lib/prisma";
 export default async function AdminProductsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ search?: string }>;
+  searchParams: Promise<{
+    search?: string;
+    category?: string;
+    status?: string;
+  }>;
 }) {
-  const { search } = await searchParams;
+  const { search, category, status } = await searchParams;
+
   const normalizedSearch = search?.trim() ?? "";
+  const normalizedCategory = category?.trim() ?? "";
+
+  const normalizedStatus =
+    status === "active" || status === "inactive" ? status : "all";
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -36,47 +46,78 @@ export default async function AdminProductsPage({
     redirect("/");
   }
 
-  const products = await prisma.product.findMany({
-    where: normalizedSearch
-      ? {
-          OR: [
-            {
-              name: {
-                contains: normalizedSearch,
-                mode: "insensitive",
-              },
-            },
-            {
-              sku: {
-                contains: normalizedSearch,
-                mode: "insensitive",
-              },
-            },
-          ],
-        }
-      : undefined,
-    orderBy: {
-      createdAt: "desc",
-    },
-    include: {
-      images: {
-        orderBy: {
-          displayOrder: "asc",
-        },
-        take: 1,
+  const [categories, products] = await Promise.all([
+    prisma.category.findMany({
+      where: {
+        isActive: true,
       },
-      category: {
-        select: {
-          name: true,
+      orderBy: {
+        name: "asc",
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+    }),
+
+    prisma.product.findMany({
+      where: {
+        ...(normalizedSearch
+          ? {
+              OR: [
+                {
+                  name: {
+                    contains: normalizedSearch,
+                    mode: "insensitive",
+                  },
+                },
+                {
+                  sku: {
+                    contains: normalizedSearch,
+                    mode: "insensitive",
+                  },
+                },
+              ],
+            }
+          : {}),
+
+        ...(normalizedCategory
+          ? {
+              categoryId: normalizedCategory,
+            }
+          : {}),
+
+        ...(normalizedStatus !== "all"
+          ? {
+              isActive: normalizedStatus === "active",
+            }
+          : {}),
+      },
+
+      orderBy: {
+        createdAt: "desc",
+      },
+
+      include: {
+        images: {
+          orderBy: {
+            displayOrder: "asc",
+          },
+          take: 1,
+        },
+        category: {
+          select: {
+            name: true,
+          },
+        },
+        brand: {
+          select: {
+            name: true,
+          },
         },
       },
-      brand: {
-        select: {
-          name: true,
-        },
-      },
-    },
-  });
+    }),
+  ]);
 
   return (
     <main className="min-h-screen bg-neutral-50">
@@ -85,8 +126,10 @@ export default async function AdminProductsPage({
           <div>
             <h1 className="text-2xl font-semibold tracking-tight">Products</h1>
 
-            <div className="mt-6">
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <ProductSearch />
+
+              <ProductFilters categories={categories} />
             </div>
 
             <p className="mt-1 text-sm text-neutral-500">
