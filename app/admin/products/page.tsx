@@ -141,7 +141,7 @@ export default async function AdminProductsPage() {
                             </p>
 
                             <p className="mt-1 text-xs text-neutral-500">
-                              SKU: {product.sku}
+                              {product.sku}
                             </p>
 
                             <p className="mt-1 text-xs text-neutral-500">
