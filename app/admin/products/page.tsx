@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -104,7 +105,12 @@ export default async function AdminProductsPage() {
 
               <tbody>
                 {products.map((product) => {
-                  const image = product.images[0]?.url ?? product.thumbnail;
+                  const rawImage = product.images[0]?.url ?? product.thumbnail;
+
+                  const image =
+                    typeof rawImage === "string" && rawImage.trim()
+                      ? rawImage.trim().replace(/\\/g, "/").replace(/^\/?/, "/")
+                      : null;
 
                   return (
                     <tr
@@ -193,12 +199,12 @@ export default async function AdminProductsPage() {
                       </td>
 
                       <td className="px-5 py-4 text-right">
-                        <button
-                          type="button"
+                        <Link
+                          href={`/admin/products/${product.id}`}
                           className="rounded-full border border-neutral-200 px-4 py-2 text-xs font-semibold text-neutral-800 transition hover:border-black hover:bg-black hover:text-white"
                         >
                           Edit
-                        </button>
+                        </Link>
                       </td>
                     </tr>
                   );
