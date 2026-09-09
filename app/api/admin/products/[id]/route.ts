@@ -454,3 +454,57 @@ export async function PATCH(request: Request, context: RouteContext) {
     );
   }
 }
+
+export async function DELETE(_request: Request, context: RouteContext) {
+  const admin = await requireAdmin();
+
+  if (admin.error) {
+    return admin.error;
+  }
+
+  const { id } = await context.params;
+
+  try {
+    const product = await prisma.product.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        isActive: true,
+      },
+    });
+
+    if (!product) {
+      return NextResponse.json(
+        { error: "Product not found." },
+        { status: 404 },
+      );
+    }
+
+    const updatedProduct = await prisma.product.update({
+      where: {
+        id,
+      },
+      data: {
+        isActive: false,
+      },
+      select: {
+        id: true,
+        isActive: true,
+      },
+    });
+
+    return NextResponse.json({
+      message: "Product deactivated successfully.",
+      product: updatedProduct,
+    });
+  } catch (error) {
+    console.error("Admin product deactivation failed:", error);
+
+    return NextResponse.json(
+      { error: "Unable to deactivate product." },
+      { status: 500 },
+    );
+  }
+}

@@ -1,3 +1,4 @@
+import ProductActions from "@/components/admin/ProductActions";
 import Image from "next/image";
 import Link from "next/link";
 import { headers } from "next/headers";
@@ -199,12 +200,19 @@ export default async function AdminProductsPage() {
                       </td>
 
                       <td className="px-5 py-4 text-right">
-                        <Link
-                          href={`/admin/products/${product.id}`}
-                          className="rounded-full border border-neutral-200 px-4 py-2 text-xs font-semibold text-neutral-800 transition hover:border-black hover:bg-black hover:text-white"
-                        >
-                          Edit
-                        </Link>
+                        <div className="flex items-center justify-end gap-2">
+                          <Link
+                            href={`/admin/products/${product.id}`}
+                            className="rounded-full border border-neutral-200 px-4 py-2 text-xs font-semibold text-neutral-800 transition hover:border-black hover:bg-black hover:text-white"
+                          >
+                            Edit
+                          </Link>
+
+                          <ProductActions
+                            productId={product.id}
+                            isActive={product.isActive}
+                          />
+                        </div>
                       </td>
                     </tr>
                   );
