@@ -65,12 +65,12 @@ export default async function AdminProductsPage() {
             </p>
           </div>
 
-          <button
-            type="button"
-            className="w-full rounded-full bg-black px-5 py-3 text-sm font-semibold text-white transition hover:bg-neutral-800 sm:w-auto"
+          <Link
+            href="/admin/products/new"
+            className="flex w-full items-center justify-center rounded-full bg-black px-5 py-3 text-sm font-semibold text-white transition hover:bg-neutral-800 sm:w-auto"
           >
             Add Product
-          </button>
+          </Link>
         </div>
 
         <div className="mt-8 overflow-hidden rounded-2xl border border-neutral-200 bg-white">
