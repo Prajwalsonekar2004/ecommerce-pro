@@ -11,6 +11,7 @@ export const auth = betterAuth({
   trustedOrigins: [
     "http://localhost:3000",
     "https://ecommerce-pro-bice.vercel.app",
+    "https://ecommerce-p5802r88q-black-head-fashion.vercel.app",
   ],
   secret: process.env.BETTER_AUTH_SECRET,
   database: prismaAdapter(prisma, {
