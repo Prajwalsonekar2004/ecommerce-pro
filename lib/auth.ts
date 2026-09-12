@@ -10,7 +10,7 @@ export const auth = betterAuth({
   baseURL: {
     allowedHosts: [
       "ecommerce-pro-bice.vercel.app",
-      "*.black-head-fashion.vercel.app",
+      "blackheadfashion-*-black-head-fashion.vercel.app",
       ...(process.env.NODE_ENV === "development" ? ["localhost:3000"] : []),
     ],
     fallback: "https://ecommerce-pro-bice.vercel.app",
