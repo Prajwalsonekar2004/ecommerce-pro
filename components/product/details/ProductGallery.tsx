@@ -30,6 +30,10 @@ export default function ProductGallery({ product }: Props) {
 
   const activeImage = images[activeIndex] ?? images[0];
 
+  function normalizeImage(image: string) {
+    return image.trim().replace(/\\/g, "/").replace(/^\/?/, "/");
+  }
+
   function previousImage() {
     setActiveIndex((current) =>
       current === 0 ? images.length - 1 : current - 1,
@@ -59,7 +63,7 @@ export default function ProductGallery({ product }: Props) {
             }`}
           >
             <Image
-              src={image}
+              src={normalizeImage(image)}
               alt={`${product.name} ${index + 1}`}
               fill
               sizes="54px"
@@ -73,7 +77,7 @@ export default function ProductGallery({ product }: Props) {
       <div className="relative min-w-0 flex-1 overflow-hidden bg-white">
         <div className="relative aspect-[4/5] w-full">
           <Image
-            src={activeImage}
+            src={normalizeImage(activeImage)}
             alt={product.name}
             fill
             priority={activeIndex === 0}

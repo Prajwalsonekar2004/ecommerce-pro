@@ -15,6 +15,8 @@ export default function SiteChrome({
 }) {
   const pathname = usePathname();
 
+  const isAdminRoute = pathname === "/admin" || pathname.startsWith("/admin/");
+
   const isCheckoutFlow =
     pathname === "/checkout" || pathname.startsWith("/checkout/");
 
@@ -26,7 +28,7 @@ export default function SiteChrome({
     }
 
     const authenticated = sessionStorage.getItem(CHECKOUT_AUTH_KEY) === "true";
-    // Read checkout authentication state from sessionStorage on route entry.
+
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setCheckoutAuthenticated(authenticated);
   }, [isCheckoutFlow]);
@@ -52,7 +54,8 @@ export default function SiteChrome({
     };
   }, [isCheckoutFlow]);
 
-  const showMainChrome = !isCheckoutFlow || !checkoutAuthenticated;
+  const showMainChrome =
+    !isAdminRoute && (!isCheckoutFlow || !checkoutAuthenticated);
 
   return (
     <>
@@ -60,7 +63,7 @@ export default function SiteChrome({
 
       {children}
 
-      {!isCheckoutFlow && <Footer />}
+      {!isAdminRoute && !isCheckoutFlow && <Footer />}
     </>
   );
 }

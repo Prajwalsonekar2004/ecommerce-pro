@@ -14,20 +14,25 @@ export default function ProductImage({ product }: Props) {
   const { isInWishlist, toggleWishlist } = useWishlist();
 
   const image = product.images?.[0];
+
+  const normalizedImage =
+    typeof image === "string" && image.trim()
+      ? image.trim().replace(/\\/g, "/").replace(/^\/?/, "/")
+      : null;
+
   const isWishlisted = isInWishlist(product.id);
 
   function handleWishlist(event: React.MouseEvent) {
     event.preventDefault();
     event.stopPropagation();
-
     toggleWishlist(product);
   }
 
   return (
     <div className="relative aspect-[4/5] w-full overflow-hidden bg-neutral-100">
-      {image ? (
+      {normalizedImage ? (
         <Image
-          src={image}
+          src={normalizedImage}
           alt={product.name}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 40vw"
